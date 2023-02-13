@@ -16,17 +16,17 @@
   <meta name="author" content="Cot287">
   <meta name="keywords" content="">
   
-    <meta name="description" content="原理维吉尼亚密码（Vigenere）是使用一系列凯撒密码组成密码字母表的加密算法，属于多表密码的一种简单形式。  维吉尼亚表格 下面给出一个例子 1234明文：come greatwall密钥：cryptoTEXT  首先，对密钥进行填充使其长度与明文长度一样。    明文 c o m e g r e a t w a l l    密钥 c r y p t o c r y p t o c   其次">
+    <meta name="description" content="原理 维吉尼亚密码（Vigenere）是使用一系列凯撒密码组成密码字母表的加密算法，属于多表密码的一种简单形式。  维吉尼亚表格 下面给出一个例子 1234明文：come greatwall密钥：cryptoTEXT 首先，对密钥进行填充使其长度与明文长度一样。    明文 c o m e g r e a t w a l l     密钥 c r y p t o c r y p t o c">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Cot287&#39;s blog">
 <meta property="og:url" content="http://example.com/2023/02/13/Vigenere/index.html">
 <meta property="og:site_name" content="Cot287&#39;s blog">
-<meta property="og:description" content="原理维吉尼亚密码（Vigenere）是使用一系列凯撒密码组成密码字母表的加密算法，属于多表密码的一种简单形式。  维吉尼亚表格 下面给出一个例子 1234明文：come greatwall密钥：cryptoTEXT  首先，对密钥进行填充使其长度与明文长度一样。    明文 c o m e g r e a t w a l l    密钥 c r y p t o c r y p t o c   其次">
+<meta property="og:description" content="原理 维吉尼亚密码（Vigenere）是使用一系列凯撒密码组成密码字母表的加密算法，属于多表密码的一种简单形式。  维吉尼亚表格 下面给出一个例子 1234明文：come greatwall密钥：cryptoTEXT 首先，对密钥进行填充使其长度与明文长度一样。    明文 c o m e g r e a t w a l l     密钥 c r y p t o c r y p t o c">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://ctf-wiki.org/crypto/classical/figure/vigenere1.jpg">
 <meta property="og:image" content="https://ctf-wiki.org/crypto/classical/figure/vigenere2.jpg">
 <meta property="article:published_time" content="2023-02-12T16:36:10.709Z">
-<meta property="article:modified_time" content="2023-02-12T16:18:42.522Z">
+<meta property="article:modified_time" content="2023-02-13T11:50:36.063Z">
 <meta property="article:author" content="Cot287">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://ctf-wiki.org/crypto/classical/figure/vigenere1.jpg">
@@ -280,188 +280,193 @@
             
               <div class="markdown-body">
                 
-                <h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>维吉尼亚密码（Vigenere）是使用一系列凯撒密码组成密码字母表的加密算法，属于多表密码的一种简单形式。</p>
+                <h2 id="原理"><a class="markdownIt-Anchor" href="#原理"></a> 原理</h2>
+<p>维吉尼亚密码（Vigenere）是使用一系列凯撒密码组成密码字母表的加密算法，属于多表密码的一种简单形式。</p>
 <p><a target="_blank" rel="noopener" href="https://ctf-wiki.org/crypto/classical/figure/vigenere1.jpg"><img src="https://ctf-wiki.org/crypto/classical/figure/vigenere1.jpg" srcset="/img/loading.gif" lazyload alt="维吉尼亚表格"></a></p>
 <p>维吉尼亚表格</p>
 <p>下面给出一个例子</p>
 <figure class="highlight arcade"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs arcade">明文：come greatwall<br>密钥：crypto<br><br><span class="hljs-built_in">TEXT</span><br></code></pre></td></tr></table></figure>
-
 <p>首先，对密钥进行填充使其长度与明文长度一样。</p>
 <table>
 <thead>
 <tr>
-<th align="left">明文</th>
-<th align="left">c</th>
-<th align="left">o</th>
-<th align="left">m</th>
-<th align="left">e</th>
-<th align="left">g</th>
-<th align="left">r</th>
-<th align="left">e</th>
-<th align="left">a</th>
-<th align="left">t</th>
-<th align="left">w</th>
-<th align="left">a</th>
-<th align="left">l</th>
-<th align="left">l</th>
+<th style="text-align:left">明文</th>
+<th style="text-align:left">c</th>
+<th style="text-align:left">o</th>
+<th style="text-align:left">m</th>
+<th style="text-align:left">e</th>
+<th style="text-align:left">g</th>
+<th style="text-align:left">r</th>
+<th style="text-align:left">e</th>
+<th style="text-align:left">a</th>
+<th style="text-align:left">t</th>
+<th style="text-align:left">w</th>
+<th style="text-align:left">a</th>
+<th style="text-align:left">l</th>
+<th style="text-align:left">l</th>
 </tr>
 </thead>
-<tbody><tr>
-<td align="left">密钥</td>
-<td align="left">c</td>
-<td align="left">r</td>
-<td align="left">y</td>
-<td align="left">p</td>
-<td align="left">t</td>
-<td align="left">o</td>
-<td align="left">c</td>
-<td align="left">r</td>
-<td align="left">y</td>
-<td align="left">p</td>
-<td align="left">t</td>
-<td align="left">o</td>
-<td align="left">c</td>
+<tbody>
+<tr>
+<td style="text-align:left">密钥</td>
+<td style="text-align:left">c</td>
+<td style="text-align:left">r</td>
+<td style="text-align:left">y</td>
+<td style="text-align:left">p</td>
+<td style="text-align:left">t</td>
+<td style="text-align:left">o</td>
+<td style="text-align:left">c</td>
+<td style="text-align:left">r</td>
+<td style="text-align:left">y</td>
+<td style="text-align:left">p</td>
+<td style="text-align:left">t</td>
+<td style="text-align:left">o</td>
+<td style="text-align:left">c</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>其次，查表得密文</p>
 <p><a target="_blank" rel="noopener" href="https://ctf-wiki.org/crypto/classical/figure/vigenere2.jpg"><img src="https://ctf-wiki.org/crypto/classical/figure/vigenere2.jpg" srcset="/img/loading.gif" lazyload alt="维吉尼亚加密"></a></p>
 <p>维吉尼亚加密</p>
 <figure class="highlight arcade"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs arcade">明文：come greatwall<br>密钥：crypto<br>密文：efkt zferrltzn<br><br><span class="hljs-built_in">TEXT</span><br></code></pre></td></tr></table></figure>
-
-<h2 id="破解"><a href="#破解" class="headerlink" title="破解"></a>破解</h2><p>对包括维吉尼亚密码在内的所有多表密码的破译都是以字母频率为基础的，但直接的频率分析却并不适用，这是因为在维吉尼亚密码中，一个字母可以被加密成不同的密文，因而简单的频率分析在这里并没有用。</p>
+<h2 id="破解"><a class="markdownIt-Anchor" href="#破解"></a> 破解</h2>
+<p>对包括维吉尼亚密码在内的所有多表密码的破译都是以字母频率为基础的，但直接的频率分析却并不适用，这是因为在维吉尼亚密码中，一个字母可以被加密成不同的密文，因而简单的频率分析在这里并没有用。</p>
 <p><strong>破译维吉尼亚密码的关键在于它的密钥是循环重复的</strong> 。如果我们知道了密钥的长度，那密文就可以被看作是交织在一起的凯撒密码，而其中每一个都可以单独破解。关于密码的长度，我们可以 使用卡西斯基试验和弗里德曼试验来获取。</p>
 <p>卡西斯基试验是基于类似 the 这样的常用单词有可能被同样的密钥字母进行加密，从而在密文中重复出现。例如，明文中不同的 CRYPTO 可能被密钥 ABCDEF 加密成不同的密文：</p>
 <figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm">密钥：ABCDEF AB CDEFA <span class="hljs-keyword">BCD </span>EFABCDEFABCD<br>明文：CRYPTO IS <span class="hljs-keyword">SHORT </span>FOR CRYPTOGRAPHY<br>密文：CSASXT IT UKSWT GQU GWYQVRKWAQJB<br><br>MIPSASM<br></code></pre></td></tr></table></figure>
-
 <p>此时明文中重复的元素在密文中并不重复。然而，如果密钥相同的话，结果可能便为（使用密钥 ABCD）：</p>
 <figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm">密钥：ABCDAB CD ABCDA <span class="hljs-keyword">BCD </span>ABCDABCDABCD<br>明文：CRYPTO IS <span class="hljs-keyword">SHORT </span>FOR CRYPTOGRAPHY<br>密文：CSASTP KV SIQUT GQU CSASTPIUAQJB<br><br>MIPSASM<br></code></pre></td></tr></table></figure>
-
 <p>此时卡西斯基试验就能产生效果。对于更长的段落此方法更为有效，因为通常密文中重复的片段会更多。如通过下面的密文就能破译出密钥的长度：</p>
 <figure class="highlight arcade"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs arcade">密文：DYDUXRMHTVDVNQDQNWDYDUXRMHARTJGWNQD<br><br><span class="hljs-built_in">TEXT</span><br></code></pre></td></tr></table></figure>
-
 <p>其中，两个 DYDUXRMH 的出现相隔了 18 个字母。因此，可以假定密钥的长度是 18 的约数，即长度为 18、9、6、3 或 2。而两个 NQD 则相距 20 个字母，意味着密钥长度应为 20、10、5、4 或 2。取两者的交集，则可以基本确定密钥长度为 2。接下来就是进行进一步的操作了。</p>
-<h3 id="字母频率"><a href="#字母频率" class="headerlink" title="字母频率"></a>字母频率</h3><table>
+<h3 id="字母频率"><a class="markdownIt-Anchor" href="#字母频率"></a> 字母频率</h3>
+<table>
 <thead>
 <tr>
-<th align="center">字母</th>
-<th align="center">英语中出现的频率</th>
+<th style="text-align:center">字母</th>
+<th style="text-align:center">英语中出现的频率</th>
 </tr>
 </thead>
-<tbody><tr>
-<td align="center"><strong>a</strong></td>
-<td align="center">8.167%</td>
+<tbody>
+<tr>
+<td style="text-align:center"><strong>a</strong></td>
+<td style="text-align:center">8.167%</td>
 </tr>
 <tr>
-<td align="center"><strong>b</strong></td>
-<td align="center">1.492%</td>
+<td style="text-align:center"><strong>b</strong></td>
+<td style="text-align:center">1.492%</td>
 </tr>
 <tr>
-<td align="center"><strong>c</strong></td>
-<td align="center">2.782%</td>
+<td style="text-align:center"><strong>c</strong></td>
+<td style="text-align:center">2.782%</td>
 </tr>
 <tr>
-<td align="center"><strong>d</strong></td>
-<td align="center">4.253%</td>
+<td style="text-align:center"><strong>d</strong></td>
+<td style="text-align:center">4.253%</td>
 </tr>
 <tr>
-<td align="center"><strong>e</strong></td>
-<td align="center">12.702%</td>
+<td style="text-align:center"><strong>e</strong></td>
+<td style="text-align:center">12.702%</td>
 </tr>
 <tr>
-<td align="center"><strong>f</strong></td>
-<td align="center">2.228%</td>
+<td style="text-align:center"><strong>f</strong></td>
+<td style="text-align:center">2.228%</td>
 </tr>
 <tr>
-<td align="center"><strong>g</strong></td>
-<td align="center">2.015%</td>
+<td style="text-align:center"><strong>g</strong></td>
+<td style="text-align:center">2.015%</td>
 </tr>
 <tr>
-<td align="center"><strong>h</strong></td>
-<td align="center">6.094%</td>
+<td style="text-align:center"><strong>h</strong></td>
+<td style="text-align:center">6.094%</td>
 </tr>
 <tr>
-<td align="center"><strong>i</strong></td>
-<td align="center">6.966%</td>
+<td style="text-align:center"><strong>i</strong></td>
+<td style="text-align:center">6.966%</td>
 </tr>
 <tr>
-<td align="center"><strong>j</strong></td>
-<td align="center">0.153%</td>
+<td style="text-align:center"><strong>j</strong></td>
+<td style="text-align:center">0.153%</td>
 </tr>
 <tr>
-<td align="center"><strong>k</strong></td>
-<td align="center">0.772%</td>
+<td style="text-align:center"><strong>k</strong></td>
+<td style="text-align:center">0.772%</td>
 </tr>
 <tr>
-<td align="center"><strong>l</strong></td>
-<td align="center">4.025%</td>
+<td style="text-align:center"><strong>l</strong></td>
+<td style="text-align:center">4.025%</td>
 </tr>
 <tr>
-<td align="center"><strong>m</strong></td>
-<td align="center">2.406%</td>
+<td style="text-align:center"><strong>m</strong></td>
+<td style="text-align:center">2.406%</td>
 </tr>
 <tr>
-<td align="center"><strong>n</strong></td>
-<td align="center">6.749%</td>
+<td style="text-align:center"><strong>n</strong></td>
+<td style="text-align:center">6.749%</td>
 </tr>
 <tr>
-<td align="center"><strong>o</strong></td>
-<td align="center">7.507%</td>
+<td style="text-align:center"><strong>o</strong></td>
+<td style="text-align:center">7.507%</td>
 </tr>
 <tr>
-<td align="center"><strong>p</strong></td>
-<td align="center">1.929%</td>
+<td style="text-align:center"><strong>p</strong></td>
+<td style="text-align:center">1.929%</td>
 </tr>
 <tr>
-<td align="center"><strong>q</strong></td>
-<td align="center">0.095%</td>
+<td style="text-align:center"><strong>q</strong></td>
+<td style="text-align:center">0.095%</td>
 </tr>
 <tr>
-<td align="center"><strong>r</strong></td>
-<td align="center">5.987%</td>
+<td style="text-align:center"><strong>r</strong></td>
+<td style="text-align:center">5.987%</td>
 </tr>
 <tr>
-<td align="center"><strong>s</strong></td>
-<td align="center">6.327%</td>
+<td style="text-align:center"><strong>s</strong></td>
+<td style="text-align:center">6.327%</td>
 </tr>
 <tr>
-<td align="center"><strong>t</strong></td>
-<td align="center">9.056%</td>
+<td style="text-align:center"><strong>t</strong></td>
+<td style="text-align:center">9.056%</td>
 </tr>
 <tr>
-<td align="center"><strong>u</strong></td>
-<td align="center">2.758%</td>
+<td style="text-align:center"><strong>u</strong></td>
+<td style="text-align:center">2.758%</td>
 </tr>
 <tr>
-<td align="center"><strong>v</strong></td>
-<td align="center">0.978%</td>
+<td style="text-align:center"><strong>v</strong></td>
+<td style="text-align:center">0.978%</td>
 </tr>
 <tr>
-<td align="center"><strong>w</strong></td>
-<td align="center">2.360%</td>
+<td style="text-align:center"><strong>w</strong></td>
+<td style="text-align:center">2.360%</td>
 </tr>
 <tr>
-<td align="center"><strong>x</strong></td>
-<td align="center">0.150%</td>
+<td style="text-align:center"><strong>x</strong></td>
+<td style="text-align:center">0.150%</td>
 </tr>
 <tr>
-<td align="center"><strong>y</strong></td>
-<td align="center">1.974%</td>
+<td style="text-align:center"><strong>y</strong></td>
+<td style="text-align:center">1.974%</td>
 </tr>
 <tr>
-<td align="center"><strong>z</strong></td>
-<td align="center">0.074%</td>
+<td style="text-align:center"><strong>z</strong></td>
+<td style="text-align:center">0.074%</td>
 </tr>
-</tbody></table>
-<h2 id="例题"><a href="#例题" class="headerlink" title="例题"></a>例题</h2><h3 id="ImaginaryCTF-Round28-Recaesar-Revenge"><a href="#ImaginaryCTF-Round28-Recaesar-Revenge" class="headerlink" title="ImaginaryCTF Round28 Recaesar Revenge"></a>ImaginaryCTF Round28 Recaesar Revenge</h3><p><strong>Description</strong></p>
+</tbody>
+</table>
+<h2 id="例题"><a class="markdownIt-Anchor" href="#例题"></a> 例题</h2>
+<h3 id="imaginaryctf-round28-recaesar-revenge"><a class="markdownIt-Anchor" href="#imaginaryctf-round28-recaesar-revenge"></a> ImaginaryCTF Round28 Recaesar Revenge</h3>
+<p><strong>Description</strong></p>
 <blockquote>
 <p>Revamped the cipher with a 256 byte key! Surely it’s completely uncrackable now… Note: flag.txt contains lots of English text, most of which is not the flag.</p>
 </blockquote>
-<h4 id="problem-py"><a href="#problem-py" class="headerlink" title="problem.py"></a><a target="_blank" rel="noopener" href="http://problem.py/">problem.py</a></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> random <span class="hljs-keyword">import</span> randint<br><span class="hljs-keyword">import</span> sys<br><br>alphabet = <span class="hljs-built_in">bytes</span>(<span class="hljs-built_in">range</span>(<span class="hljs-number">10</span>, <span class="hljs-number">128</span>))<br><br>block_size = <span class="hljs-number">16</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">caesar</span>(<span class="hljs-params">plaintext, key</span>):<br>    ret = [alphabet[(plaintext[i] + key[i] - <span class="hljs-number">10</span>)%<span class="hljs-built_in">len</span>(alphabet)] <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(block_size)]<br>    <span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(plaintext) &gt; block_size:<br>           ret += caesar(plaintext[block_size:], caesar(key, key))<br>    <span class="hljs-keyword">return</span> ret<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    sys.setrecursionlimit(<span class="hljs-number">2</span>**<span class="hljs-number">31</span> - <span class="hljs-number">1</span>)<br><br>    flag = <span class="hljs-built_in">open</span>(<span class="hljs-string">&quot;flag.txt&quot;</span>).read()<br>    <span class="hljs-keyword">assert</span> <span class="hljs-built_in">all</span>(<span class="hljs-built_in">ord</span>(i) <span class="hljs-keyword">in</span> alphabet <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> flag)<br>    key = [randint(<span class="hljs-number">0</span>, <span class="hljs-number">2</span>**<span class="hljs-number">128</span>) <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(block_size)]<br>    out = <span class="hljs-built_in">open</span>(<span class="hljs-string">&quot;output.txt&quot;</span>, <span class="hljs-string">&quot;wb&quot;</span>)<br>    <span class="hljs-comment"># flag = &#x27;a&#x27;*block_size</span><br>    <span class="hljs-keyword">while</span> <span class="hljs-built_in">len</span>(flag) % block_size:<br>        flag += <span class="hljs-string">&#x27;\n&#x27;</span><br>    out.write(<span class="hljs-built_in">bytes</span>(caesar(flag.encode(), key)))<br><br>PYTHON<br></code></pre></td></tr></table></figure>
-
-<h4 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h4><blockquote>
+<h4 id="problempy"><a class="markdownIt-Anchor" href="#problempy"></a> <a target="_blank" rel="noopener" href="http://problem.py">problem.py</a></h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> random <span class="hljs-keyword">import</span> randint<br><span class="hljs-keyword">import</span> sys<br><br>alphabet = <span class="hljs-built_in">bytes</span>(<span class="hljs-built_in">range</span>(<span class="hljs-number">10</span>, <span class="hljs-number">128</span>))<br><br>block_size = <span class="hljs-number">16</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">caesar</span>(<span class="hljs-params">plaintext, key</span>):<br>    ret = [alphabet[(plaintext[i] + key[i] - <span class="hljs-number">10</span>)%<span class="hljs-built_in">len</span>(alphabet)] <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(block_size)]<br>    <span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(plaintext) &gt; block_size:<br>           ret += caesar(plaintext[block_size:], caesar(key, key))<br>    <span class="hljs-keyword">return</span> ret<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    sys.setrecursionlimit(<span class="hljs-number">2</span>**<span class="hljs-number">31</span> - <span class="hljs-number">1</span>)<br><br>    flag = <span class="hljs-built_in">open</span>(<span class="hljs-string">&quot;flag.txt&quot;</span>).read()<br>    <span class="hljs-keyword">assert</span> <span class="hljs-built_in">all</span>(<span class="hljs-built_in">ord</span>(i) <span class="hljs-keyword">in</span> alphabet <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> flag)<br>    key = [randint(<span class="hljs-number">0</span>, <span class="hljs-number">2</span>**<span class="hljs-number">128</span>) <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(block_size)]<br>    out = <span class="hljs-built_in">open</span>(<span class="hljs-string">&quot;output.txt&quot;</span>, <span class="hljs-string">&quot;wb&quot;</span>)<br>    <span class="hljs-comment"># flag = &#x27;a&#x27;*block_size</span><br>    <span class="hljs-keyword">while</span> <span class="hljs-built_in">len</span>(flag) % block_size:<br>        flag += <span class="hljs-string">&#x27;\n&#x27;</span><br>    out.write(<span class="hljs-built_in">bytes</span>(caesar(flag.encode(), key)))<br></code></pre></td></tr></table></figure>
+<h4 id="解析"><a class="markdownIt-Anchor" href="#解析"></a> 解析</h4>
+<blockquote>
 <p>对密文分组后加密进行词频统计，排序后与字母频率比较即可</p>
 </blockquote>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-tag">from</span> Crypto<span class="hljs-selector-class">.Util</span><span class="hljs-selector-class">.number</span> import *<br><br>def dec(s, key):<br>    out = []<br>    for i in s:<br>        out += [alphabet[(i + key - <span class="hljs-number">10</span>)%<span class="hljs-built_in">len</span>(alphabet)]]<br>        key = alphabet[(key + key - <span class="hljs-number">10</span>)%<span class="hljs-built_in">len</span>(alphabet)]<br>    return out<br><br>def <span class="hljs-built_in">get_fre</span>(s):<br>    fre = &#123;&#125;<br>    for <span class="hljs-selector-tag">i</span> in s:<br>        if i in fre : fre[i] += <span class="hljs-number">1</span><br>        else : fre[i] = <span class="hljs-number">1</span><br>    sorted_chars = [i[<span class="hljs-number">0</span>] for i in <span class="hljs-built_in">sorted</span>(fre.<span class="hljs-built_in">items</span>(), key=lambda x:-x[<span class="hljs-number">1</span>])]<br>    return sorted_chars<br><br>def <span class="hljs-built_in">caesar</span>(plaintext, key):<br>    ret = [alphabet[(plaintext[i] + key[i] - <span class="hljs-number">10</span>)%<span class="hljs-built_in">len</span>(alphabet)] for i in <span class="hljs-built_in">range</span>(<span class="hljs-number">16</span>)]<br>    if <span class="hljs-built_in">len</span>(plaintext) &gt; <span class="hljs-number">16</span>:<br>           ret += <span class="hljs-built_in">caesar</span>(plaintext[<span class="hljs-number">16</span>:], <span class="hljs-built_in">caesar</span>(key, key))<br>    return ret<br><br>alphabet = <span class="hljs-built_in">bytes</span>(<span class="hljs-built_in">range</span>(<span class="hljs-number">10</span>, <span class="hljs-number">128</span>))<br>v = [<span class="hljs-string">&#x27;e&#x27;</span>,<span class="hljs-string">&#x27;t&#x27;</span>,<span class="hljs-string">&#x27;a&#x27;</span>,<span class="hljs-string">&#x27;o&#x27;</span>,<span class="hljs-string">&#x27;i&#x27;</span>,<span class="hljs-string">&#x27;n&#x27;</span>,<span class="hljs-string">&#x27;s&#x27;</span>,<span class="hljs-string">&#x27;h&#x27;</span>,<span class="hljs-string">&#x27;r&#x27;</span>,<span class="hljs-string">&#x27;d&#x27;</span>]<br><br>data = [[] for i in <span class="hljs-built_in">range</span>(<span class="hljs-number">16</span>)] <br>tmp = <span class="hljs-built_in">open</span>(<span class="hljs-string">&quot;Recaesar Revenge.txt&quot;</span>,<span class="hljs-string">&#x27;rb&#x27;</span>).<span class="hljs-built_in">read</span>()<br>for i in <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(tmp)):<br>    data[i%<span class="hljs-number">16</span>].<span class="hljs-built_in">append</span>(tmp[i])<br>key = []<br><br>for d in data:<br>    for k in <span class="hljs-built_in">range</span>(<span class="hljs-number">118</span>):<br>        shift = [<span class="hljs-built_in">chr</span>(i) for i in <span class="hljs-built_in">dec</span>(d, k)]<br>        tmp_fre = <span class="hljs-built_in">get_fre</span>(shift)<br>        if <span class="hljs-built_in">len</span>(<span class="hljs-built_in">set</span>(tmp_fre[:<span class="hljs-number">10</span>]) &amp; <span class="hljs-built_in">set</span>(v)) &gt;= <span class="hljs-number">8</span>:<br>            key.<span class="hljs-built_in">append</span>(k)<br>            break<br><br>m = [[] for i in <span class="hljs-built_in">range</span>(<span class="hljs-number">16</span>)]<br>for i in <span class="hljs-built_in">range</span>(<span class="hljs-number">16</span>):<br>    m[i] = [<span class="hljs-built_in">chr</span>(i) for i in <span class="hljs-built_in">dec</span>(data[i], key[i])]<br>f = <span class="hljs-string">&#x27;&#x27;</span><br>for i in <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(m[<span class="hljs-number">0</span>])):<br>    for j in <span class="hljs-built_in">range</span>(<span class="hljs-number">16</span>):<br>        f += m[j][i]<br>p = f.<span class="hljs-built_in">index</span>(<span class="hljs-string">&#x27;ictf&#x27;</span>)<br><span class="hljs-built_in">print</span>(f[p:p+<span class="hljs-number">100</span>])<br># ictf&#123;All_that_we_know_who_lie_in_gaol_Is_that_the_wall_is_strong;&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> Crypto.Util.number <span class="hljs-keyword">import</span> *<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">dec</span>(<span class="hljs-params">s, key</span>):<br>    out = []<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> s:<br>        out += [alphabet[(i + key - <span class="hljs-number">10</span>)%<span class="hljs-built_in">len</span>(alphabet)]]<br>        key = alphabet[(key + key - <span class="hljs-number">10</span>)%<span class="hljs-built_in">len</span>(alphabet)]<br>    <span class="hljs-keyword">return</span> out<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">get_fre</span>(<span class="hljs-params">s</span>):<br>    fre = &#123;&#125;<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> s:<br>        <span class="hljs-keyword">if</span> i <span class="hljs-keyword">in</span> fre : fre[i] += <span class="hljs-number">1</span><br>        <span class="hljs-keyword">else</span> : fre[i] = <span class="hljs-number">1</span><br>    sorted_chars = [i[<span class="hljs-number">0</span>] <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">sorted</span>(fre.items(), key=<span class="hljs-keyword">lambda</span> x:-x[<span class="hljs-number">1</span>])]<br>    <span class="hljs-keyword">return</span> sorted_chars<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">caesar</span>(<span class="hljs-params">plaintext, key</span>):<br>    ret = [alphabet[(plaintext[i] + key[i] - <span class="hljs-number">10</span>)%<span class="hljs-built_in">len</span>(alphabet)] <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">16</span>)]<br>    <span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(plaintext) &gt; <span class="hljs-number">16</span>:<br>           ret += caesar(plaintext[<span class="hljs-number">16</span>:], caesar(key, key))<br>    <span class="hljs-keyword">return</span> ret<br><br>alphabet = <span class="hljs-built_in">bytes</span>(<span class="hljs-built_in">range</span>(<span class="hljs-number">10</span>, <span class="hljs-number">128</span>))<br>v = [<span class="hljs-string">&#x27;e&#x27;</span>,<span class="hljs-string">&#x27;t&#x27;</span>,<span class="hljs-string">&#x27;a&#x27;</span>,<span class="hljs-string">&#x27;o&#x27;</span>,<span class="hljs-string">&#x27;i&#x27;</span>,<span class="hljs-string">&#x27;n&#x27;</span>,<span class="hljs-string">&#x27;s&#x27;</span>,<span class="hljs-string">&#x27;h&#x27;</span>,<span class="hljs-string">&#x27;r&#x27;</span>,<span class="hljs-string">&#x27;d&#x27;</span>]<br><br>data = [[] <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">16</span>)] <br>tmp = <span class="hljs-built_in">open</span>(<span class="hljs-string">&quot;Recaesar Revenge.txt&quot;</span>,<span class="hljs-string">&#x27;rb&#x27;</span>).read()<br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(tmp)):<br>    data[i%<span class="hljs-number">16</span>].append(tmp[i])<br>key = []<br><br><span class="hljs-keyword">for</span> d <span class="hljs-keyword">in</span> data:<br>    <span class="hljs-keyword">for</span> k <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">118</span>):<br>        shift = [<span class="hljs-built_in">chr</span>(i) <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> dec(d, k)]<br>        tmp_fre = get_fre(shift)<br>        <span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(<span class="hljs-built_in">set</span>(tmp_fre[:<span class="hljs-number">10</span>]) &amp; <span class="hljs-built_in">set</span>(v)) &gt;= <span class="hljs-number">8</span>:<br>            key.append(k)<br>            <span class="hljs-keyword">break</span><br><br>m = [[] <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">16</span>)]<br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">16</span>):<br>    m[i] = [<span class="hljs-built_in">chr</span>(i) <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> dec(data[i], key[i])]<br>f = <span class="hljs-string">&#x27;&#x27;</span><br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(m[<span class="hljs-number">0</span>])):<br>    <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">16</span>):<br>        f += m[j][i]<br>p = f.index(<span class="hljs-string">&#x27;ictf&#x27;</span>)<br><span class="hljs-built_in">print</span>(f[p:p+<span class="hljs-number">100</span>])<br><span class="hljs-comment"># ictf&#123;All_that_we_know_who_lie_in_gaol_Is_that_the_wall_is_strong;&#125;</span><br></code></pre></td></tr></table></figure>
                 
               </div>
             
@@ -523,9 +528,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/02/13/AMM/" title="">
+                      <a href="/2023/02/13/AMM/" title="AMM">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile"></span>
+                        <span class="hidden-mobile">AMM</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
