@@ -1,0 +1,1040 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Cot287">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Dijkstra 算法  算法思路主要是不断更新经由点xxx到达终点yyy的距离，xxx遍历所有点初始为yyy本身，也就是开始考虑直接到达终点的点   算法正确性  简要概述下：所有点到达终点都可以考虑为经过一点再到达终点(若可以直接到达，则考虑为经过终点，再到达终点，即第二段距离为0)；那么给定终点A，每次更新result,更新了result中的点到A的最短距离，并且更新了notFound中的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="图论的四个算法">
+<meta property="og:url" content="http://example.com/2023/02/13/%E5%9B%BE%E8%AE%BA%E7%9A%84%E5%9B%9B%E4%B8%AA%E7%AE%97%E6%B3%95/index.html">
+<meta property="og:site_name" content="Cot287&#39;s blog">
+<meta property="og:description" content="Dijkstra 算法  算法思路主要是不断更新经由点xxx到达终点yyy的距离，xxx遍历所有点初始为yyy本身，也就是开始考虑直接到达终点的点   算法正确性  简要概述下：所有点到达终点都可以考虑为经过一点再到达终点(若可以直接到达，则考虑为经过终点，再到达终点，即第二段距离为0)；那么给定终点A，每次更新result,更新了result中的点到A的最短距离，并且更新了notFound中的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2023/02/13/%E5%9B%BE%E8%AE%BA%E7%9A%84%E5%9B%9B%E4%B8%AA%E7%AE%97%E6%B3%95/1.jpg">
+<meta property="og:image" content="http://example.com/2023/02/13/%E5%9B%BE%E8%AE%BA%E7%9A%84%E5%9B%9B%E4%B8%AA%E7%AE%97%E6%B3%95/2.jpg">
+<meta property="og:image" content="http://example.com/2023/02/13/%E5%9B%BE%E8%AE%BA%E7%9A%84%E5%9B%9B%E4%B8%AA%E7%AE%97%E6%B3%95/3.jpg">
+<meta property="og:image" content="http://example.com/2023/02/13/%E5%9B%BE%E8%AE%BA%E7%9A%84%E5%9B%9B%E4%B8%AA%E7%AE%97%E6%B3%95/4.jpg">
+<meta property="og:image" content="http://example.com/2023/02/13/%E5%9B%BE%E8%AE%BA%E7%9A%84%E5%9B%9B%E4%B8%AA%E7%AE%97%E6%B3%95/5.jpg">
+<meta property="og:image" content="http://example.com/2023/02/13/%E5%9B%BE%E8%AE%BA%E7%9A%84%E5%9B%9B%E4%B8%AA%E7%AE%97%E6%B3%95/6.jpg">
+<meta property="og:image" content="http://example.com/2023/02/13/%E5%9B%BE%E8%AE%BA%E7%9A%84%E5%9B%9B%E4%B8%AA%E7%AE%97%E6%B3%95/7.jpg">
+<meta property="og:image" content="http://example.com/2023/02/13/%E5%9B%BE%E8%AE%BA%E7%9A%84%E5%9B%9B%E4%B8%AA%E7%AE%97%E6%B3%95/8.jpg">
+<meta property="og:image" content="http://example.com/2023/02/13/%E5%9B%BE%E8%AE%BA%E7%9A%84%E5%9B%9B%E4%B8%AA%E7%AE%97%E6%B3%95/9.jpg">
+<meta property="og:image" content="https://eydl0d2q3c.feishu.cn/space/api/box/stream/download/asynccode/?code=MWRhZjc5YTE1NjU0NDgxYzdmZWZlNWQwYjkzZjA5OWJfOGJHSGVtNDdYNjIyU0dZc1pqSHNtMGRHcDdacUR2MzdfVG9rZW46Ym94Y25IU0FPRDNoZHJNYThDQ0wxbmE0TVBkXzE2NzYzNTk3OTA6MTY3NjM2MzM5MF9WNA">
+<meta property="og:image" content="https://eydl0d2q3c.feishu.cn/space/api/box/stream/download/asynccode/?code=ZmUyMzMxZTJiMTQ5YjJjMWQ2ODY4YjY4ZWI5ODRmODJfMGxZWno3VWZWZlR1WEl4MmdpYlV0N3FWNmlKRHV6V21fVG9rZW46Ym94Y240dm45TDRQMFlOOVVyTDFoNXI5QmhUXzE2NzYzNTk3OTA6MTY3NjM2MzM5MF9WNA">
+<meta property="article:published_time" content="2023-02-13T12:56:06.776Z">
+<meta property="article:modified_time" content="2023-02-17T12:22:36.060Z">
+<meta property="article:author" content="Cot287">
+<meta property="article:tag" content="图论">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2023/02/13/%E5%9B%BE%E8%AE%BA%E7%9A%84%E5%9B%9B%E4%B8%AA%E7%AE%97%E6%B3%95/1.jpg">
+  
+  
+  
+  <title>图论的四个算法 - Cot287&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/katex@0.11.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="图论的四个算法"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-02-13 20:56" pubdate>
+          2023年2月13日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          6.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          52 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">图论的四个算法</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="dijkstra-算法"><a class="markdownIt-Anchor" href="#dijkstra-算法"></a> Dijkstra 算法</h2>
+<blockquote>
+<p><strong>算法思路主要是不断更新经由点<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">x</span></span></span></span>到达终点<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span>的距离，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">x</span></span></span></span>遍历所有点初始为<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span>本身，也就是开始考虑直接到达终点的点</strong></p>
+</blockquote>
+<h3 id="算法正确性"><a class="markdownIt-Anchor" href="#算法正确性"></a> 算法正确性</h3>
+<blockquote>
+<p>简要概述下：所有点到达终点都可以考虑为<strong>经过一点再到达终点</strong>(若可以直接到达，则考虑为经过终点，再到达终点，即第二段距离为0)；那么给定终点A，每次更新result,更新了result中的点到A的最短距离，并且更新了notFound中的所有点到result中所有点的最短距离，那么只需要选择两段和最短的即可(还不能理解结合下面进行思考)</p>
+</blockquote>
+<h3 id="案例"><a class="markdownIt-Anchor" href="#案例"></a> 案例</h3>
+<p>以 A 点为顶点，求到其他点的最短路径。</p>
+<img src="/2023/02/13/%E5%9B%BE%E8%AE%BA%E7%9A%84%E5%9B%9B%E4%B8%AA%E7%AE%97%E6%B3%95/1.jpg" srcset="/img/loading.gif" lazyload alt="1" style="zoom:50%;">
+<p>邻接矩阵图</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-type">int</span> graph[<span class="hljs-number">4</span>][<span class="hljs-number">4</span>] = &#123;<br>&#123;<span class="hljs-number">0</span> , <span class="hljs-number">2</span>, ∞, <span class="hljs-number">6</span>&#125;<br>&#123;<span class="hljs-number">2</span> , <span class="hljs-number">0</span>, <span class="hljs-number">3</span>, <span class="hljs-number">2</span>&#125;<br>&#123;∞ , <span class="hljs-number">3</span>, <span class="hljs-number">0</span>, <span class="hljs-number">2</span>&#125;<br>&#123;<span class="hljs-number">6</span> , <span class="hljs-number">2</span>, <span class="hljs-number">2</span>, <span class="hljs-number">0</span>&#125;&#125; ;<br></code></pre></td></tr></table></figure>
+<p><strong>（重点）算法要点</strong></p>
+<ul>
+<li><strong>result： 已求出</strong> 最小路径的顶点</li>
+<li><strong>notFound： 未求出</strong> 最小路径的顶点，里面的值是 <strong>到起点的距离</strong></li>
+</ul>
+<blockquote>
+<p>每次从 「未求出最短路径的点」中 取出 距离起点 最近的点，以这个点为桥梁 刷新「未求出最短路径的点」的距离</p>
+</blockquote>
+<p>初始， <code>result=&#123;A(0)&#125;</code> 中只有起点 A， <code>notFound=&#123;B(2),C(∞),D(6)&#125;</code> 中是除了 A 点的其他点，里面的值是到起点的距离（例如 B(2) 代表 B点到起点的距离为 2）</p>
+<img src="/2023/02/13/%E5%9B%BE%E8%AE%BA%E7%9A%84%E5%9B%9B%E4%B8%AA%E7%AE%97%E6%B3%95/2.jpg" srcset="/img/loading.gif" lazyload alt="1" style="zoom:50%;">
+<p><strong>取出最短路径的点：</strong></p>
+<p>从「未求出最短路径的点」notFound 中取出 最短路径的点 B(2)，放入结果 result 中，结果如下：</p>
+<p>「未求出最短路径点」 <code>notFound=&#123;C(∞),D(6)&#125;</code> ，「已求出最短路径的点 」 <code>result=&#123;A(0),B(2)&#125;</code></p>
+<p><strong>刷新距离</strong> ：</p>
+<p>通过 B(2) 为桥梁，刷新距离。</p>
+<p>例如 <code>AD = 6 &lt; AB + BD = 4</code> 以 B(2) 为桥梁的距离更短，就刷新「未求出最短路径点」D(6) 的距离为 D(4)<code>notFound=&#123;C(∞),D(4)&#125;</code></p>
+<p>同理刷新 C(∞) 的距离为 C(5) ，最后结果如下：</p>
+<p>「未求出最短路径点」 <code>notFound=&#123;C(5),D(4)&#125;</code></p>
+<p>「已求出最短路径的点」 <code>result=&#123;A(0),B(2)&#125;</code></p>
+<img src="/2023/02/13/%E5%9B%BE%E8%AE%BA%E7%9A%84%E5%9B%9B%E4%B8%AA%E7%AE%97%E6%B3%95/3.jpg" srcset="/img/loading.gif" lazyload alt="1" style="zoom:50%;">
+<p>然后，从「未求出最短路径的点」notFound 中取出 最短路径的点 D(4) ，然后通过 D(4) 为桥梁 刷新「未求出最短路径的点」的距离</p>
+<p>同理，最后结果如下：</p>
+<p>「未求出最短路径点」 <code>notFound=&#123;C(5)&#125;</code></p>
+<p>「已求出最短路径的点」 <code>result=&#123;A(0),B(2),D(4)&#125;</code></p>
+<img src="/2023/02/13/%E5%9B%BE%E8%AE%BA%E7%9A%84%E5%9B%9B%E4%B8%AA%E7%AE%97%E6%B3%95/4.jpg" srcset="/img/loading.gif" lazyload alt="1" style="zoom:50%;">
+<p><strong>然后，从「未求出最短路径的点」notFound 中取出 最短路径的点 C(5) ，算法结束</strong></p>
+<p><strong><code>result=&#123;A(0),B(2),D(4),C(5)&#125;</code></strong> <strong>就是最终所求的 最短距离</strong></p>
+<img src="/2023/02/13/%E5%9B%BE%E8%AE%BA%E7%9A%84%E5%9B%9B%E4%B8%AA%E7%AE%97%E6%B3%95/5.jpg" srcset="/img/loading.gif" lazyload alt="1" style="zoom:50%;">
+<h2 id="floyd-算法"><a class="markdownIt-Anchor" href="#floyd-算法"></a> Floyd 算法</h2>
+<blockquote>
+<p>Floyd 算法是 <strong>所有点到所有点</strong> 的最短路径的算法，是一个基于「贪心」、「动态规划」求一个图中 <strong>所有点到所有点</strong> 最短路径的算法，时间复杂度 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><msup><mi>n</mi><mn>3</mn></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(n^3)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.064108em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></p>
+<p><strong>以每个点为「中转站」，刷新所有「入度」和「出度」的距离</strong></p>
+<p>xxxxxxxxxx # sagefrom gmpy2 import gcdextfrom random import randint# r|p-1def AMM_rth_root(delta:int, r:int, p:int):    g = GF(p)    delta = g(delta)    rho = g(randint(1, p))    while pow(rho,(p-1)//r,p) == 1:        rho = g(randint(1, p))​    s, t = p-1, 0    while s%r == 0:        s = s // r        t += 1    _, alpha, _ = gcdext(r,s)    alpha = alpha % s    a = rho ^ ((p-1) // r)    b = delta ^ (r*alpha-1)    c = rho ^ s    h = 1        for i in range(1,t):        d = b ^ (r ^ (t-1-i))        if d == 1: j = 0        else : j = -discrete_log(log(a,d))        b = b * (c^r) ^ j        h = h * c^j        c = c^r    return delta^alpha * hpython</p>
+</blockquote>
+<h3 id="案例-2"><a class="markdownIt-Anchor" href="#案例-2"></a> 案例</h3>
+<blockquote>
+<p>求所有点到所有点的最短距离</p>
+</blockquote>
+<img src="/2023/02/13/%E5%9B%BE%E8%AE%BA%E7%9A%84%E5%9B%9B%E4%B8%AA%E7%AE%97%E6%B3%95/6.jpg" srcset="/img/loading.gif" lazyload alt="1" style="zoom:50%;">
+<p>邻接矩阵图</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-type">int</span> graph[][] = &#123;<br>&#123;<span class="hljs-number">0</span> , <span class="hljs-number">2</span>, ∞, <span class="hljs-number">6</span>&#125;<br>&#123;<span class="hljs-number">2</span> , <span class="hljs-number">0</span>, <span class="hljs-number">3</span>, <span class="hljs-number">2</span>&#125;<br>&#123;∞ , <span class="hljs-number">3</span>, <span class="hljs-number">0</span>, <span class="hljs-number">2</span>&#125;<br>&#123;<span class="hljs-number">6</span> , <span class="hljs-number">2</span>, <span class="hljs-number">2</span>, <span class="hljs-number">0</span>&#125;&#125;;<br></code></pre></td></tr></table></figure>
+<p><strong>算法要点</strong></p>
+<p><strong><code>distance[][]</code></strong> ：用来储存每个点到其他点的最短距离</p>
+<p><strong><code>path[][]</code></strong> ：用来储存每个点到其他点最短距离的路径</p>
+<blockquote>
+<p>要点： <strong>以每个点为「中转站」，刷新所有「入度」和「出度」的距离。</strong> 所以我们要：遍历每一个顶点 --&gt; 遍历点的每一个入度 --&gt; 遍历每一个点的出度，以这个点为「中转站」距离更短就刷新距离（比如 B 点为中转站 AB + BD &lt; AD 就刷新 A 到 D 的距离）</p>
+</blockquote>
+<p><strong>初始化：</strong></p>
+<p>初始化距离 distance 为图结构 graph，初始化路径 path 为初始图结构的路径如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs Java">====distance====<br> <span class="hljs-number">0</span> <span class="hljs-number">2</span> -<span class="hljs-number">1</span>  <span class="hljs-number">6</span> <br> <span class="hljs-number">2</span> <span class="hljs-number">0</span>  <span class="hljs-number">3</span>  <span class="hljs-number">2</span> <br>-<span class="hljs-number">1</span> <span class="hljs-number">3</span>  <span class="hljs-number">0</span>  <span class="hljs-number">2</span> <br> <span class="hljs-number">6</span> <span class="hljs-number">2</span>  <span class="hljs-number">2</span>  <span class="hljs-number">0</span> <br>====path====<br><span class="hljs-number">0</span> <span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span> <br><span class="hljs-number">0</span> <span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span> <br><span class="hljs-number">0</span> <span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span> <br><span class="hljs-number">0</span> <span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span><br></code></pre></td></tr></table></figure>
+<img src="/2023/02/13/%E5%9B%BE%E8%AE%BA%E7%9A%84%E5%9B%9B%E4%B8%AA%E7%AE%97%E6%B3%95/7.jpg" srcset="/img/loading.gif" lazyload alt="1" style="zoom:50%;">
+<p><strong>以 A 为「中转站」, 刷新所有「入度」和「出度」的距离</strong></p>
+<p>A 的入度有 B 、D 2点，A 的出度也是 B、D 2点</p>
+<p>BA + AD &gt; BD</p>
+<p>DA + AB &gt; DB</p>
+<p>所以没有更小的距离，不能「刷新距离」， <code>distance[][]</code> 和 <code>path[][]</code> 不刷新</p>
+<img src="/2023/02/13/%E5%9B%BE%E8%AE%BA%E7%9A%84%E5%9B%9B%E4%B8%AA%E7%AE%97%E6%B3%95/8.jpg" srcset="/img/loading.gif" lazyload alt="1" style="zoom:50%;">
+<p><strong>以 B 为「中转站」，刷新所有的「入度」和「出度」的距离</strong></p>
+<p>B 的入度有 A、C、D；B 的出度有 A、C、D。（所以一共有 6 种组合）</p>
+<p><strong>AB + BC &lt; AC</strong> （ <code>2 + 3 &lt; 无穷大</code> ，这里的 -1 代表无穷大）</p>
+<ul>
+<li><strong>刷新距离：</strong></li>
+<li>刷新距离：将 AB + BC 的距离 5 赋值给 AC 距离 -1，即 <code>distance[0][2] = distance[0][1]  + distance[1][2]</code></li>
+<li>刷新最短路径：AC 的最短距离不再是直线 AC 的最短距离，引入「中转站」B 点，即 <code>path[0][2] = 1</code></li>
+</ul>
+<p><strong>AB + BD &lt; AD</strong> （ <code>2 + 2 &lt; 6</code> ）</p>
+<ul>
+<li><strong>刷新距离：</strong></li>
+<li>刷新距离：将 AB + BD = 4 的值赋值给 AD，即 <code>distance[0][3] = distance[0][1] +distance[1][3]</code></li>
+<li>刷新最短路径：AD的最短距离不再是直线 AD 的最短距离，引入「中转站」B 点，即 <code>path[0][3] = 1</code></li>
+</ul>
+<p><strong>CB + BA &lt; CA</strong> （ <code>2 + 3 &lt; 无穷大</code> 同理第一个 AB + BC &lt; AC ，刷新距离）</p>
+<p><strong>CB + BD &gt; CD</strong> （ <code>3 + 2 &gt; 2</code> ，不用刷新距离）</p>
+<p><strong>DB + BA &lt; DA</strong> （ <code>2 + 2 &lt; 6</code> ，同理第二个 AB + BD &lt; AD， 刷新距离）</p>
+<p><strong>DB + BC &lt; DC</strong> （2 + 3 &lt; 2 ，不用刷新距离）</p>
+<p>刷新后的 <code>distance[][]</code> 和 <code>path[][]</code> 如下所示</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs Java">====distance====<br><span class="hljs-number">0</span> <span class="hljs-number">2</span> <span class="hljs-number">5</span> <span class="hljs-number">4</span> <br><span class="hljs-number">2</span> <span class="hljs-number">0</span> <span class="hljs-number">3</span> <span class="hljs-number">2</span> <br><span class="hljs-number">5</span> <span class="hljs-number">3</span> <span class="hljs-number">0</span> <span class="hljs-number">2</span> <br><span class="hljs-number">4</span> <span class="hljs-number">2</span> <span class="hljs-number">2</span> <span class="hljs-number">0</span> <br>====path====<br><span class="hljs-number">0</span> <span class="hljs-number">1</span> <span class="hljs-number">1</span> <span class="hljs-number">1</span> <br><span class="hljs-number">0</span> <span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span> <br><span class="hljs-number">1</span> <span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span> <br><span class="hljs-number">1</span> <span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span><br></code></pre></td></tr></table></figure>
+<img src="/2023/02/13/%E5%9B%BE%E8%AE%BA%E7%9A%84%E5%9B%9B%E4%B8%AA%E7%AE%97%E6%B3%95/9.jpg" srcset="/img/loading.gif" lazyload alt="1" style="zoom:50%;">
+<p><strong>以 C 点为「中转站」，刷新所有「出度」和「入度」的距离</strong></p>
+<p>类似 3 步骤，这里不赘述</p>
+<p><strong>以 D 点为「中转站」，刷新所有「出度」和「入度」的距离</strong></p>
+<p>类似 3 步骤，这里不赘述，结束算法</p>
+<hr>
+<h2 id="prim算法"><a class="markdownIt-Anchor" href="#prim算法"></a> Prim算法</h2>
+<p>Prim算法构造最小生成树的过程如下图所示。初始时从图中任取一顶点(如顶点加入树T，此时树中只含有一个顶点，之后选择一个与当前T中顶点集合距离最近的顶点，并将该顶点和相应的边加入T，每次操作后T中的顶点数和边数都增1。以此类推，直至图中所有的顶点都并入T，得到的T就是最小生成树。此时T中必然有n-1条边。 <strong>通俗点说就是：从一个顶点出发，在保证不形成回路的前提下，每找到并添加一条最短的边，就把当前形成的连通分量当做一个整体或者一个点看待，然后重复“找最短的边并添加”的操作。</strong></p>
+<img src="https://eydl0d2q3c.feishu.cn/space/api/box/stream/download/asynccode/?code=MWRhZjc5YTE1NjU0NDgxYzdmZWZlNWQwYjkzZjA5OWJfOGJHSGVtNDdYNjIyU0dZc1pqSHNtMGRHcDdacUR2MzdfVG9rZW46Ym94Y25IU0FPRDNoZHJNYThDQ0wxbmE0TVBkXzE2NzYzNTk3OTA6MTY3NjM2MzM5MF9WNA" srcset="/img/loading.gif" lazyload alt="img" style="zoom:50%;">
+<p>Prim算法的步骤如下： 假设 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>G</mi><mo>=</mo><mo stretchy="false">{</mo><mi>V</mi><mo separator="true">,</mo><mi>E</mi><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">G= \{V, E\}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal">G</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">{</span><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="mclose">}</span></span></span></span>是连通图，其最小生成树<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>T</mi><mo>=</mo><mo stretchy="false">(</mo><mi>U</mi><mo separator="true">,</mo><msub><mi>E</mi><mi>T</mi></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">T=(U, E_T)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.10903em;">U</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.05764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">T</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>E</mi><mi>T</mi></msub></mrow><annotation encoding="application/x-tex">E_T</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.05764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">T</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 是最小生成树中边的集合。 初始化：向空树<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>T</mi><mo>=</mo><mo stretchy="false">(</mo><mi>U</mi><mo separator="true">,</mo><msub><mi>E</mi><mi>T</mi></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">T=(U, E_T)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.10903em;">U</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.05764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">T</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>中添加图<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>G</mi><mo>=</mo><mo stretchy="false">(</mo><mi>V</mi><mo separator="true">,</mo><mi>E</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">G=(V, E)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal">G</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="mclose">)</span></span></span></span>的任一顶点<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>u</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">u_0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">u</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>，使<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>U</mi><mo>=</mo><mo stretchy="false">{</mo><msub><mi>u</mi><mn>0</mn></msub><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">U=\{u_0\}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">U</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">{</span><span class="mord"><span class="mord mathnormal">u</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">}</span></span></span></span>，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>E</mi><mi>T</mi></msub><mo>=</mo><mi>N</mi><mi>U</mi><mi>L</mi><mi>L</mi></mrow><annotation encoding="application/x-tex">E_T=NULL</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.05764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">T</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="mord mathnormal" style="margin-right:0.10903em;">U</span><span class="mord mathnormal">L</span><span class="mord mathnormal">L</span></span></span></span> 循环(重复下列操作直至<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>U</mi><mo>=</mo><mi>V</mi></mrow><annotation encoding="application/x-tex">U=V</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">U</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.22222em;">V</span></span></span></span>)：从图<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>G</mi></mrow><annotation encoding="application/x-tex">G</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal">G</span></span></span></span>中选择满足<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">{</mo><mo stretchy="false">(</mo><mi>u</mi><mo separator="true">,</mo><mi>v</mi><mo stretchy="false">)</mo><mi mathvariant="normal">∣</mi><mi>u</mi><mo>∈</mo><mi>U</mi><mo separator="true">,</mo><mi>v</mi><mo>∈</mo><mi>V</mi><mo>−</mo><mi>U</mi><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">\{(u, v)|u∈U, v∈V-U\}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">{</span><span class="mopen">(</span><span class="mord mathnormal">u</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mclose">)</span><span class="mord">∣</span><span class="mord mathnormal">u</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8777699999999999em;vertical-align:-0.19444em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">U</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.76666em;vertical-align:-0.08333em;"></span><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">U</span><span class="mclose">}</span></span></span></span>且具有最小权值的边<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>u</mi><mo separator="true">,</mo><mi>v</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(u,v)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">u</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mclose">)</span></span></span></span>,加入树 T ，置<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>U</mi><mo>=</mo><mi>U</mi><mo>∪</mo><mo stretchy="false">{</mo><mi>v</mi><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">U=U∪\{v\}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">U</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">U</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∪</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">{</span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mclose">}</span></span></span></span>，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>E</mi><mi>T</mi></msub><mo>=</mo><msub><mi>E</mi><mi>T</mi></msub><mi>U</mi><mo stretchy="false">{</mo><mo stretchy="false">(</mo><mi>u</mi><mo separator="true">,</mo><mi>v</mi><mo stretchy="false">)</mo><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">E_T= E_TU\{(u, v)\}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.05764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">T</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.05764em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">T</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord mathnormal" style="margin-right:0.10903em;">U</span><span class="mopen">{</span><span class="mopen">(</span><span class="mord mathnormal">u</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mclose">)</span><span class="mclose">}</span></span></span></span> 。</p>
+<blockquote>
+<p><strong>每次选择U外的点添加新的边，保证了不成环</strong></p>
+</blockquote>
+<ul>
+<li>
+<table>
+<thead>
+<tr>
+<th>顶点数组下标i</th>
+<th>0</th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+<th>4</th>
+<th>5</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>adjvex</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>lowcost</td>
+<td>0</td>
+<td>6</td>
+<td>1</td>
+<td>5</td>
+<td>∞</td>
+<td>∞</td>
+</tr>
+<tr>
+<td>集合U</td>
+<td>0</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>添加第一条边</p>
+</li>
+<li>
+<table>
+<thead>
+<tr>
+<th>顶点数组下标i</th>
+<th>0</th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+<th>4</th>
+<th>5</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>adjvex</td>
+<td>0</td>
+<td>2</td>
+<td>2</td>
+<td>0</td>
+<td>2</td>
+<td>2</td>
+</tr>
+<tr>
+<td>lowcost</td>
+<td>0</td>
+<td>5</td>
+<td>0</td>
+<td>5</td>
+<td>6</td>
+<td>4</td>
+</tr>
+<tr>
+<td>集合U</td>
+<td>0,2</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>可以看到，初始化后，顶点2与集合U(顶点0)之间的距离是最小的。所以，添加顶点2至集合U；接下来进行更新，发现原节点1与集合U（顶点0）之间的距离6&gt;现在节点1与集合U（顶点0、2）之间的距离5，所以进行更新。将adjvex更新为节点1与集合U最小距离时的集合U中顶点，lowcost就是选择的边的权值。</p>
+</li>
+<li>
+<p>以上的话请读者再仔细阅读一遍，并结合测试所用图来考虑标红的其他部分。下面的表不再赘述。</p>
+</li>
+<li>
+<p>添加第二条边</p>
+</li>
+<li>
+<table>
+<thead>
+<tr>
+<th>顶点数组下标i</th>
+<th>0</th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+<th>4</th>
+<th>5</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>adjvex</td>
+<td>0</td>
+<td>2</td>
+<td>2</td>
+<td>5</td>
+<td>2</td>
+<td>5</td>
+</tr>
+<tr>
+<td>lowcost</td>
+<td>0</td>
+<td>5</td>
+<td>0</td>
+<td>2</td>
+<td>6</td>
+<td>0</td>
+</tr>
+<tr>
+<td>集合U</td>
+<td>0,2,5</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>添加第三条边</p>
+</li>
+<li>
+<table>
+<thead>
+<tr>
+<th>顶点数组下标i</th>
+<th>0</th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+<th>4</th>
+<th>5</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>adjvex</td>
+<td>0</td>
+<td>2</td>
+<td>2</td>
+<td>3</td>
+<td>2</td>
+<td>5</td>
+</tr>
+<tr>
+<td>lowcost</td>
+<td>0</td>
+<td>5</td>
+<td>0</td>
+<td>0</td>
+<td>6</td>
+<td>0</td>
+</tr>
+<tr>
+<td>集合U</td>
+<td>0,2,5,3</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>添加第四条边</p>
+</li>
+<li>
+<table>
+<thead>
+<tr>
+<th>顶点数组下标i</th>
+<th>0</th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+<th>4</th>
+<th>5</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>adjvex</td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>1</td>
+<td>5</td>
+</tr>
+<tr>
+<td>lowcost</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>3</td>
+<td>0</td>
+</tr>
+<tr>
+<td>集合U</td>
+<td>0,2,3,5,1</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>添加第五条边</p>
+</li>
+<li>
+<table>
+<thead>
+<tr>
+<th>顶点数组下标i</th>
+<th>0</th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+<th>4</th>
+<th>5</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>adjvex</td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+</tr>
+<tr>
+<td>lowcost</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>集合U</td>
+<td>0,2,3,5,1,4</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs C"><span class="hljs-type">void</span> <span class="hljs-title function_">Prim</span><span class="hljs-params">(Graph G)</span>&#123;<br>    <span class="hljs-type">int</span> v = <span class="hljs-number">0</span>;<span class="hljs-comment">//初始节点</span><br>    closedge C[MaxVerNum];<br>    <br>    <span class="hljs-comment">//初始化</span><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; G.vexnum; i++)&#123;<br>        C[i].adjvex = v;<br>        C[i].lowcost = G.Edge[v][i];<br>    &#125;<br>    <span class="hljs-comment">//每次增加一个边</span><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt; G.vexnum; i++)&#123;<br>        <span class="hljs-type">int</span> k, min = INF;<br>        <span class="hljs-comment">//求出与集合U权值最小的点 权值为0的代表在集合U中</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">0</span>; j&lt;G.vexnum; j++)&#123;<br>            <span class="hljs-keyword">if</span> (C[j].lowcost != <span class="hljs-number">0</span> &amp;&amp; C[j].lowcost&lt;min)&#123;<br>                min = C[j].lowcost;<br>                k = j;<br>            &#125;<br>        &#125;<br>            <br>        <span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot;(&quot;</span> &lt;&lt; G.Vex[k] &lt;&lt; <span class="hljs-string">&quot;,&quot;</span> &lt;&lt; G.Vex[C[k].adjvex]&lt;&lt;<span class="hljs-string">&quot;) &quot;</span>;<br><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">0</span>; j&lt;G.vexnum; j++)&#123;<br>            <span class="hljs-keyword">if</span> (C[j].lowcost != <span class="hljs-number">0</span> &amp;&amp; G.Edge[k][j]&lt;C[j].lowcost)&#123;   <br>                C[j].adjvex = k;<br>                C[j].lowcost= G.Edge[k][j];<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>由算法代码中的循环嵌套可得知此算法的时间复杂度为<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><msup><mi>n</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(n^2)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.064108em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>。</p>
+<h2 id="kruskal-算法"><a class="markdownIt-Anchor" href="#kruskal-算法"></a> Kruskal 算法</h2>
+<p><strong>与Prim算法从顶点开始扩展最小生成树不同，Kruskal 算法是一种按权值的递增次序选择合适的边来构造最小生成树的方法。</strong></p>
+<p>Kruskal算法构造最小生成树的过程如下图所示。初始时为只有n个顶点而无边的非连通图 T = {V, {}} 每个顶点自成一个连通分量，然后按照边的权值由小到大的顺序，不断选取当前未被选取过且权值最小的边，若该边依附的顶点落在T中不同的连通分量上，则将此边加入  T ，否则舍弃此边而选择下一条权值最小的边。以此类推，直至 T 中所有顶点都在一个连通分量上。</p>
+<img src="https://eydl0d2q3c.feishu.cn/space/api/box/stream/download/asynccode/?code=ZmUyMzMxZTJiMTQ5YjJjMWQ2ODY4YjY4ZWI5ODRmODJfMGxZWno3VWZWZlR1WEl4MmdpYlV0N3FWNmlKRHV6V21fVG9rZW46Ym94Y240dm45TDRQMFlOOVVyTDFoNXI5QmhUXzE2NzYzNTk3OTA6MTY3NjM2MzM5MF9WNA" srcset="/img/loading.gif" lazyload alt="img" style="zoom:50%;">
+<p>实现克鲁斯卡尔算法的难点在于“如何判断一个新边是否会和已选择的边构成环路”，这里教大家一种判断的方法：初始状态下，为连通网中的各个顶点配置不同的标记。对于一个新边，如果它两端顶点的标记不同，就不会构成环路，可以组成最小生成树。一旦新边被选择，需要将它的两个顶点以及和它直接相连的所有已选边两端的顶点改为相同的标记；反之，如果新边两端顶点的标记相同，就表示会构成环路。 举个例子，在上面的图 4 中，已选择的边为 A-C、B-D、D-T，接下来要判断 C-D 边是否可以组成最小生成树。对于已经选择的边，B-D 和 D-T 直接相邻，所以 B、D、T 的标记相同（假设为 1），A-C 边两端顶点的标记也相同（假设为 2）。判断 C-D 边是否可以组成最小生成树，由于 C、D 的标记不同（1 ≠ 2），所以可以组成最小生成树。C-D 作为新选择的边，与它相连的已选边有 A-C、B-D、D-T，所以要将 A、C、D、B、T 改为相同的标记。 再比如说，在图 5 的基础上判断 C-B 是否可以组成最小生成树。由上面例子的分析结果得知，C、B 两个顶点的标记相同，因此 C-B 边会和其它已选边构成环路，不能组成最小生成树（如图 6 所示）。 如下是用克鲁斯卡尔算法</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;bits/stdc++.h&gt;</span></span><br><span class="hljs-type">const</span> <span class="hljs-type">int</span> N =   <span class="hljs-comment">//边的数量 </span><br><span class="hljs-type">const</span> <span class="hljs-type">int</span> P =   <span class="hljs-comment">//点的数量 </span><br><span class="hljs-keyword">struct</span> edge &#123; <span class="hljs-type">int</span> l, r, value; &#125; edges[N];<br><br><span class="hljs-type">bool</span> <span class="hljs-keyword">operator</span> &lt;(edge a, edge b) &#123; <span class="hljs-keyword">return</span> a.value &lt; b.value; &#125;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">kruskal</span><span class="hljs-params">(edge edges[], edge minTree[])</span> </span>&#123;<br>    <span class="hljs-type">int</span> l, r, k, linked[P], num = <span class="hljs-number">0</span>;<br>    <br>    <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i=<span class="hljs-number">0</span>; i&lt;N; i++) linked[i] = i;<br>    <span class="hljs-built_in">sort</span>(edges, eages+N, cmp);<br>    <br>    <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i=<span class="hljs-number">0</span>; i&lt;N; i++) &#123;<br>        <span class="hljs-keyword">if</span> (linked[edges[i].l] != linked[edges[i].r])&#123;<br>            <br>            minTree[num++] = edges[i];<br>            linked[edges[i].r] = linked[edges[i].l];<br>            <span class="hljs-keyword">if</span> (num == N+<span class="hljs-number">1</span>) <span class="hljs-keyword">break</span>;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>对比两个算法，<strong>Kruskal算法主要是针对边来展开</strong>，边数少时效率会非常高，所以对于稀疏图有很大的优势；而<strong>Prim算法对于稠密图</strong>，即边数非常多的情况会更好一些。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%9B%BE%E8%AE%BA/">#图论</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>图论的四个算法</div>
+      <div>http://example.com/2023/02/13/图论的四个算法/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Cot287</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年2月13日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/02/14/%E5%A0%86/" title="堆的插入元素，删除元素">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">堆的插入元素，删除元素</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/02/13/Imaginaryctf%20Round%2028/" title="Imaginaryctf Pound 28">
+                        <span class="hidden-mobile">Imaginaryctf Pound 28</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
