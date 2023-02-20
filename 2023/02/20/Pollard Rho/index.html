@@ -1,0 +1,737 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Cot287">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="需要掌握Miller_Rabin算法、费马小定理   Floyd判圈算法（龟兔赛跑算法）  算法简述  Floyd判圈算法（Floyd Cycle Detection Algorithm），又称龟兔赛跑算法（Tortoise and Hare Algorithm），是一个可以在有限状态机、迭代函数或者链表上判断是否存在环，以及判断环的起点与长度的算法。   基本思路  在某种关系下，顶点 i 到">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Pollard Rho">
+<meta property="og:url" content="http://example.com/2023/02/20/Pollard%20Rho/index.html">
+<meta property="og:site_name" content="Cot287&#39;s blog">
+<meta property="og:description" content="需要掌握Miller_Rabin算法、费马小定理   Floyd判圈算法（龟兔赛跑算法）  算法简述  Floyd判圈算法（Floyd Cycle Detection Algorithm），又称龟兔赛跑算法（Tortoise and Hare Algorithm），是一个可以在有限状态机、迭代函数或者链表上判断是否存在环，以及判断环的起点与长度的算法。   基本思路  在某种关系下，顶点 i 到">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://eydl0d2q3c.feishu.cn/space/api/box/stream/download/asynccode/?code=MDdhNTY2YWIzN2FjNTdiYTA2ZjczZGIxNWU5MmM5YzZfS0tvVVFrMjRyNG9DZHNWemJjelJseVFQck9taWJkaWlfVG9rZW46Ym94Y241YThqenRubWZDQWo2S2NnSzFXT0NnXzE2NzY4OTUxOTk6MTY3Njg5ODc5OV9WNA">
+<meta property="og:image" content="https://eydl0d2q3c.feishu.cn/space/api/box/stream/download/asynccode/?code=YzU4NWFiNzM2NDljYjc5ZTJhOTAzNjYyYTExNGQ1YWZfTEUzYkhMSmh4bmM1eFV4bG4wMkN1cjQ1blRUcThzdm1fVG9rZW46Ym94Y25aV29YRGRiZGZ1MFR3V21MYUV0amllXzE2NzY4OTUxOTk6MTY3Njg5ODc5OV9WNA">
+<meta property="og:image" content="https://eydl0d2q3c.feishu.cn/space/api/box/stream/download/asynccode/?code=YTYxMGU1ODYwZWVmNDZkMWUzMjNkMDkxYTg2YWFjOGFfRnlza0x5VlFnUFNEVWdkSXJuWmxpdkhhcmZGdHJBS3VfVG9rZW46Ym94Y25Qa1pWQkdWeGhZaWE5MlJzNWRtdkFmXzE2NzY4OTUxOTk6MTY3Njg5ODc5OV9WNA">
+<meta property="article:published_time" content="2023-02-20T12:13:37.431Z">
+<meta property="article:modified_time" content="2023-02-20T12:31:01.829Z">
+<meta property="article:author" content="Cot287">
+<meta property="article:tag" content="Pollard Rho">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://eydl0d2q3c.feishu.cn/space/api/box/stream/download/asynccode/?code=MDdhNTY2YWIzN2FjNTdiYTA2ZjczZGIxNWU5MmM5YzZfS0tvVVFrMjRyNG9DZHNWemJjelJseVFQck9taWJkaWlfVG9rZW46Ym94Y241YThqenRubWZDQWo2S2NnSzFXT0NnXzE2NzY4OTUxOTk6MTY3Njg5ODc5OV9WNA">
+  
+  
+  
+  <title>Pollard Rho - Cot287&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/katex@0.11.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Pollard Rho"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-02-20 20:13" pubdate>
+          2023年2月20日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          46 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Pollard Rho</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <blockquote>
+<p>需要掌握<mark>Miller_Rabin算法、费马小定理</mark></p>
+</blockquote>
+<h2 id="floyd判圈算法龟兔赛跑算法"><a class="markdownIt-Anchor" href="#floyd判圈算法龟兔赛跑算法"></a> Floyd判圈算法（龟兔赛跑算法）</h2>
+<h3 id="算法简述"><a class="markdownIt-Anchor" href="#算法简述"></a> <strong>算法简述</strong></h3>
+<blockquote>
+<p>Floyd判圈算法（Floyd Cycle Detection Algorithm），又称龟兔赛跑算法（Tortoise and Hare Algorithm），是一个可以在有限状态机、迭代函数或者链表上判断是否存在环，以及判断环的起点与长度的算法。</p>
+</blockquote>
+<h3 id="基本思路"><a class="markdownIt-Anchor" href="#基本思路"></a> <strong>基本思路</strong></h3>
+<blockquote>
+<p>在某种关系下，顶点 i 到 k 拓扑有序，顶点 k 到 j 也是相同的顺序，那么 i 和 j 也存在这个顺序。要是某一个顶点出现了自己到自己的环，那么图中就有环，但是这种方法复杂度高一些，没有检测顶点出度或者DFS的方法快，但是非常简单。</p>
+</blockquote>
+<h4 id="1判断是否有环"><a class="markdownIt-Anchor" href="#1判断是否有环"></a> <strong>（1）判断是否有环</strong></h4>
+<blockquote>
+<p>龟兔解法的基本思想可以用我们跑步的例子来解释，如果两个人同时出发，如果赛道有环，那么快的一方总能追上慢的一方。进一步想，追上时快的一方肯定比慢的一方多跑了几圈，即多跑的路的长度是圈的长度的倍数。</p>
+</blockquote>
+<blockquote>
+<p>基于上面的想法，Floyd用两个指针，一个慢指针（龟）每次前进一步，快指针（兔）指针每次前进两步（两步或多步效果时等价的，只要一个比另一个快就行）。如果两者在链表头以外的某一点相遇，那么说明链表有环，否则，如果（快指针）到达了链表的结尾，那么说明没环。</p>
+</blockquote>
+<h4 id="2求环的长度"><a class="markdownIt-Anchor" href="#2求环的长度"></a> <strong>（2）求环的长度</strong></h4>
+<blockquote>
+<p>相遇的时候，一定已经在环上了，然后两个人只要再次在环上接着跑，再次相遇的时候（也就是所谓的套圈），跑的快的那个人就比跑的慢的人整整多跑了一圈，所以环的长度也就出来了。</p>
+</blockquote>
+<h4 id="3如何确定环的起点"><a class="markdownIt-Anchor" href="#3如何确定环的起点"></a> <strong>（3）如何确定环的起点</strong></h4>
+<blockquote>
+<p>环的检测用上述原理，接下来我们来看一下如何确定环的起点，这也是Floyd解法的第二部分。方法是将其中一个指针移到链表起点，两者同时移动，每次移动一步，那么两者相遇的地方就是环的起点。</p>
+</blockquote>
+<p><strong>解析：</strong></p>
+<blockquote>
+<p>首先假设第一次相遇的时候慢指针走过的节点个数为i，设链表头部到环的起点的长度为m，环的长度为n，相遇的位置与起点与起点位置距离为k。</p>
+</blockquote>
+<blockquote>
+<p>于是有：$$$$i=m+a*n+k$$$$,其中a为慢指针走的圈数。</p>
+</blockquote>
+<blockquote>
+<p>因为快指针的速度是慢指针的2倍，于是又可以得到另一个式子：$$$$2<em>i=m+b</em>n+k $$$$,其中b为快指针走的圈数。</p>
+</blockquote>
+<blockquote>
+<p>两式相减得：$$$$i=(b-a)*n $$$$,也就是说i是圈长的整数倍。</p>
+</blockquote>
+<blockquote>
+<p>这是将其中一个节点放在起点，然后同时向前走m步时，此时从头部走的指针在m位置。而从相遇位置开始走的指针应该在距离起点i+m，i为圈长整数倍，则该指针也应该在距离起点为m的位置，即环的起点。</p>
+</blockquote>
+<h2 id="pollardrho-算法"><a class="markdownIt-Anchor" href="#pollardrho-算法"></a> PollardRho 算法：</h2>
+<blockquote>
+<p>PollardRho 是一个很神奇的算法，用于在  $$$$O(n^{1/4})$$$$ 的期望时间复杂度内计算合数n的某个非平凡因子（除了1和它本身以外能整除它的数）。事书上给出的复杂度是  $$$$O(\sqrt{p}) $$$$ ，  p 是  n 的某个最小因子，满足  p 与  n/p 互质。虽然是随机的，但  PollardRho 算法在实际环境中运行的相当不错，不会被卡。</p>
+</blockquote>
+<h3 id="问题模型"><a class="markdownIt-Anchor" href="#问题模型"></a> 问题模型：</h3>
+<p>给一个数  n ，你需要快速求出它的一个非平凡因子。</p>
+<p>对于一个比较小的数（$$$$n≤10^9$$$$），我们直接暴力枚举质因子就行但太大了我们就必须考虑一下随机算法了。</p>
+<p>对于一个非常大的合数  $$$$n≤10^{18} $$$$ （如果可能是质数，我们可以用Miller Rabin判一下）我们要求  n 的某一个非平凡因子，如果  n 的质因子很多（就是约数很多）我们也可以暴力随机弄一弄，但如果是一些（像由两个差不多的而且很大的质数乘得的n）它的非平凡因子就只有两个而且  n 本身还很大，此时如果我们随机的话复杂度  $$$$O(\sqrt{n})$$$$ ，这个太难接受了，所以我们想办法优化一下。</p>
+<h3 id="1求-gcd"><a class="markdownIt-Anchor" href="#1求-gcd"></a> 1.求  gcd</h3>
+<p>直接随机求  n 的某一个约数复杂度很高，可以考虑求一下  gcd 。因为我们可以保证一个合数它绝对存在一个质因子小于  $$$$\sqrt{n} $$$$ ，所以在  n 就存在至少$$$$\sqrt{n} $$$$ 个数与  n 有大于一的公约数。于是我们随机的可能性就提高到了  $$$$O(\sqrt{n}lgn) $$$$ 。</p>
+<h3 id="2生日悖论"><a class="markdownIt-Anchor" href="#2生日悖论"></a> 2.生日悖论</h3>
+<p>生日悖论其实不是一个逻辑悖论，只是与很多人的第一感觉不符罢了。它可以表述为： 一个房间里有23个人，则他们中有两人生日相同的概率超过一半 （不考虑闰年）。其实这在数学上很好证明，即   $$$$\frac{365}{365}\times\frac{364}{365}\times\frac{363}{365}\times\cdots\times\frac{365-22}{365}&lt;\frac12$$$$ 。</p>
+<p>生日悖论启示我们，如果我们不断在某个范围内生成随机整数，很快便会生成到重复的数，期望大约在根号级别。精确地说，对于一个$$$$[1,N]$$$$内整数的理想随机数生成器，生成序列中第一个重复数字前期望有$$$$\sqrt{\frac{πN}{2}}$$$$个数</p>
+<p>xxxxxxxxxx # sagefrom gmpy2 import gcdextfrom random import randint# r|p-1def AMM_rth_root(delta:int, r:int, p:int):    g = GF(p)    delta = g(delta)    rho = g(randint(1, p))    while pow(rho,(p-1)//r,p) == 1:        rho = g(randint(1, p))​    s, t = p-1, 0    while s%r == 0:        s = s // r        t += 1    _, alpha, _ = gcdext(r,s)    alpha = alpha % s    a = rho ^ ((p-1) // r)    b = delta ^ (r*alpha-1)    c = rho ^ s    h = 1        for i in range(1,t):        d = b ^ (r ^ (t-1-i))        if d == 1: j = 0        else : j = -discrete_log(log(a,d))        b = b * (c^r) ^ j        h = h * c^j        c = c^r    return delta^alpha * hpython</p>
+<p>但这件事意义并没有那么大。正如虽然生日悖论是正确的，但你不一定能在班上遇到和自己生日相同的人，因为这个高概率是在 <strong>两两比较</strong> 下才成立的。对这$$$$n^{\frac14}$$$$ 个数两两进行验证，复杂度立刻退回到   $$$$O(\sqrt n\lg n) $$$$ ，并没有什么进步。所以我们需要一些技巧。</p>
+<h3 id="3伪随机数序列"><a class="markdownIt-Anchor" href="#3伪随机数序列"></a> 3.伪随机数序列</h3>
+<p>Pollard使用一种特别的伪随机数生成器来生成 $$$$[0,N-1]$$$$ 间的伪随机数序列：设序列第一个数为 $$$$x$$$$ ，$$$$f(x):=(x^2+c)\bmod N$$$$ ，则$$$$x,f(x),f(f(x)),\cdots$$$$为一个伪随机数序列。</p>
+<p>以下为$$$$x=0,c=24,N=9409$$$$时，生成的前100个数：</p>
+<p><img src="https://eydl0d2q3c.feishu.cn/space/api/box/stream/download/asynccode/?code=MDdhNTY2YWIzN2FjNTdiYTA2ZjczZGIxNWU5MmM5YzZfS0tvVVFrMjRyNG9DZHNWemJjelJseVFQck9taWJkaWlfVG9rZW46Ym94Y241YThqenRubWZDQWo2S2NnSzFXT0NnXzE2NzY4OTUxOTk6MTY3Njg5ODc5OV9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>不过如果稍微换一下参数，把$$$$N$$$$换成$$$$9400$$$$的话……</p>
+<p><img src="https://eydl0d2q3c.feishu.cn/space/api/box/stream/download/asynccode/?code=YzU4NWFiNzM2NDljYjc5ZTJhOTAzNjYyYTExNGQ1YWZfTEUzYkhMSmh4bmM1eFV4bG4wMkN1cjQ1blRUcThzdm1fVG9rZW46Ym94Y25aV29YRGRiZGZ1MFR3V21MYUV0amllXzE2NzY4OTUxOTk6MTY3Njg5ODc5OV9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>其实这是显然的，因为每个数都是由前一个数决定的，可以生成的数又是有限的，那么迟早会进入 <strong>循环</strong> 。当然，这个循环很可能是 <strong>混循环</strong> ，所以生成的序列常常形成这样的ρ形，这也是为什么Pollard把这个算法命名为rho算法：</p>
+<p><img src="https://eydl0d2q3c.feishu.cn/space/api/box/stream/download/asynccode/?code=YTYxMGU1ODYwZWVmNDZkMWUzMjNkMDkxYTg2YWFjOGFfRnlza0x5VlFnUFNEVWdkSXJuWmxpdkhhcmZGdHJBS3VfVG9rZW46Ym94Y25Qa1pWQkdWeGhZaWE5MlJzNWRtdkFmXzE2NzY4OTUxOTk6MTY3Njg5ODc5OV9WNA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>我们在这里使用 <strong>Floyd判环算法</strong> （也叫 <strong>龟兔赛跑算法</strong> ），设置两个变量$$$$t,r$$$$ ，每次判断是否有   $$$$\gcd(|t-r|,N)&gt;1$$$$ ，如果没有，就令$$$$t=f(t)$$$$ ，$$$$r=f(f®)$$$$ 。因为 r 跑得更快，如果没有找到答案，最终会与 t 在环上相遇，这时退出，换一个 c 重新生成伪随机数。</p>
+<p>那么，这有什么好处呢？其实，这个伪随机数生成器生成的数具有一个性质。注意到，如果$$$$|i-j|\equiv 0\pmod p$$$$ ，那么一定有$$$$|f(i)-f(j)|=|i<sup>2-j</sup>2|=|i-j|\cdot|i+j|\equiv0\pmod p $$$$ 。由此可得， 只要环上距离为 d 的两个数满足条件，那么所有距离为 d 的数都满足条件 。在Floyd判环的过程中，每次移动都相当于在检查一个新的距离 d ，这样就不需要进行两两比较了。</p>
+<p>这个算法的复杂度依赖于这个伪随机数生成器的随机程度，还没有被严格证明。如果它是足够随机的，那么期望复杂度显然是$$$$O(n^{\frac14}\log n)$$$$。</p>
+<h3 id="4判环"><a class="markdownIt-Anchor" href="#4判环"></a> 4.判环</h3>
+<p>这种随机生成方法虽然优秀，但也有一些需要注意之处，比如有可能会生成一个环，并不断在这个环上生成以前生成过一次的数，所以我们必须写点东西来判环：</p>
+<ol>
+<li>我们可以让y根据生成公式以比x快两倍的速度向后生成，这样当y再次与x相等时，x一定跑完了一个圈且没重复跑多少！</li>
+<li>我们可以用倍增的思想，让y记住x的位置，然后x再跑当前跑过次数的一倍的次数。</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-keyword">inline</span> ll <span class="hljs-title">rho</span><span class="hljs-params">(ll n)</span></span>&#123;<br>    ll x, y, c, g, i=<span class="hljs-number">0</span>, j=<span class="hljs-number">1</span>;<br>    x=y=<span class="hljs-built_in">rand</span>(); c=<span class="hljs-built_in">rand</span>();<br>    <span class="hljs-keyword">while</span>(i++)&#123;<br>        x=(<span class="hljs-built_in">qmul</span>(x,x,n)+c)%n;<br>        <span class="hljs-keyword">if</span>(x==y)<span class="hljs-keyword">break</span>;<br>        g=<span class="hljs-built_in">gcd</span>(<span class="hljs-built_in">abs</span>(y-x),n);<br>        <span class="hljs-keyword">if</span>(g&gt;<span class="hljs-number">1</span>)<span class="hljs-keyword">return</span> g;<br>        <span class="hljs-keyword">if</span>(i==j)y=x,j&lt;&lt;=<span class="hljs-number">1</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h2 id="pollardrho-算法的二次优化"><a class="markdownIt-Anchor" href="#pollardrho-算法的二次优化"></a> PollardRho 算法的二次优化：</h2>
+<p>我们发现其实  PollardRho 算法其实复杂度不止  $$$$O(n^{1/4})$$$$ ，它每一次操作都会求一次  gcd ，所以复杂度会变成  $$$$O(n^{1/4}×log)$$$$ 我们发现这个  log 实在有些拖慢速度。于是一个很奇妙的优化诞生了！</p>
+<p><strong>二次优化</strong> ：我们将若干个  (y−x) 乘到一起，如果我的若干个  (y−x) 中有一个与n有公约数，最后的结果定然也会含有这个公约数！所以我们完全可以多算几次  (y−x) 的乘积在来求  gcd （一般连续算127次再求一次gcd）</p>
+<p><strong>对原算法的一些影响：</strong> 任何一个优化都是要考虑其对原算法的影响的。这个优化也会有一些影响：首先，因为我们会等大概127次后再去gcd，然而我们有可能在生成时碰上一个环，我们有可能还没生成127次就跳出这个环了，这样就无法得出答案；其次，我们的  PollardRho 算法实在太玄学优秀了，可能我们跑127次之后，所有  (y−x) 的乘积就变成了n的倍数（模  n 意义下得到  0 ），所以我们不能完全就只呆板的等127次在取模。</p>
+<p>我们可以用倍增，分别在生成（1次，2次，4次，8次，16次，32次…）之后进行  gcd ！这样就可以完全避免上述的两个影响</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-keyword">inline</span> ll <span class="hljs-title">rho</span><span class="hljs-params">(ll p)</span></span>&#123;<br>    ll x, y, z, c, g, i;<br>    <span class="hljs-keyword">while</span>(<span class="hljs-number">1</span>)&#123;<br>        y = x = <span class="hljs-built_in">rand</span>()%p;<br>        z = <span class="hljs-number">1</span>;<br>        c = <span class="hljs-built_in">rand</span>()%p;<br>        i=<span class="hljs-number">0</span>, j=<span class="hljs-number">1</span>;<br>        <span class="hljs-keyword">while</span>(i++)&#123;<br>            x = ((x*x%p)+c)%p;<br>            z = z*<span class="hljs-built_in">abs</span>(y-x)%p;<br>            <span class="hljs-keyword">if</span>(x==y || !z)<span class="hljs-keyword">break</span>;<br>            <span class="hljs-keyword">if</span>(i%<span class="hljs-number">127</span>==<span class="hljs-number">0</span> || i&amp;(i<span class="hljs-number">-1</span>)==<span class="hljs-number">1</span>)&#123;<span class="hljs-comment">//分别在i=2^n 和 i%127==0时求gcd</span><br>                g = __gcd(z,p);<br>                <span class="hljs-keyword">if</span>(g &gt; <span class="hljs-number">1</span>)<span class="hljs-keyword">return</span> g;<br>                <span class="hljs-keyword">if</span>(i == j)y=x, j&lt;&lt;=<span class="hljs-number">1</span>;<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h3 id="总参考代码"><a class="markdownIt-Anchor" href="#总参考代码"></a> 总参考代码</h3>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-keyword">inline</span> ll <span class="hljs-title">qmul</span><span class="hljs-params">(ll x,ll y,ll mod)</span></span>&#123;<br>    <span class="hljs-keyword">return</span> (x*y-(ll)((<span class="hljs-type">long</span> <span class="hljs-type">double</span>)x/mod*y)*mod+mod)%mod;     <br>&#125;<br><br><span class="hljs-function">ll <span class="hljs-title">qpow</span><span class="hljs-params">(ll a,ll n,ll mod)</span>/</span>&#123;<br>    ll res=<span class="hljs-number">1</span>;<br>    <span class="hljs-keyword">while</span>(n)&#123;<br>        <span class="hljs-keyword">if</span>(n&amp;<span class="hljs-number">1</span>) res=<span class="hljs-built_in">qmul</span>(res,a,mod);<br>        a=<span class="hljs-built_in">qmul</span>(a,a,mod);<br>        n&gt;&gt;=<span class="hljs-number">1</span>;<br>    &#125;<br>    <span class="hljs-keyword">return</span> res;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">bool</span> <span class="hljs-title">Miller_Rabin</span><span class="hljs-params">(ll n)</span></span>&#123;<br>    <span class="hljs-keyword">if</span>(n&lt;<span class="hljs-number">3</span> || n&amp;<span class="hljs-number">1</span>==<span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> n==<span class="hljs-number">2</span>;<br>    ll u=n<span class="hljs-number">-1</span>, t=<span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">while</span>(u&amp;<span class="hljs-number">1</span> == <span class="hljs-number">0</span>) u/=<span class="hljs-number">2</span>, t++;<br>    ll ud[]=&#123;<span class="hljs-number">2</span>,<span class="hljs-number">325</span>,<span class="hljs-number">9375</span>,<span class="hljs-number">28178</span>,<span class="hljs-number">450775</span>,<span class="hljs-number">9780504</span>,<span class="hljs-number">1795265022</span>&#125;;<br>    <span class="hljs-keyword">for</span>(ll a:ud)&#123;<br>        ll v=<span class="hljs-built_in">qpow</span>(a,u,n);<br>        <span class="hljs-keyword">if</span>(v==<span class="hljs-number">1</span> || v==n<span class="hljs-number">-1</span> || v==<span class="hljs-number">0</span>) <span class="hljs-keyword">continue</span>;<br>        <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> j=<span class="hljs-number">1</span>; j&lt;=t; j++)&#123;<br>            v = <span class="hljs-built_in">qmul</span>(v,v,n);<br>            <span class="hljs-keyword">if</span>(v==n<span class="hljs-number">-1</span> &amp;&amp; j!=t)&#123; v=<span class="hljs-number">1</span>; <span class="hljs-keyword">break</span>; &#125;<br>            <span class="hljs-keyword">if</span>(v == <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>        &#125;<br>        <span class="hljs-keyword">if</span>(v != <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<span class="hljs-comment">//Fermat检验</span><br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">inline</span> ll <span class="hljs-title">rho</span><span class="hljs-params">(ll p)</span></span>&#123;<br>    ll x, y, z, c, g, i, j;<br>    <span class="hljs-keyword">if</span>(<span class="hljs-built_in">Miller_Rabin</span>(p)) <span class="hljs-keyword">return</span> p;<br>    <span class="hljs-keyword">while</span>(<span class="hljs-number">1</span>)&#123;<br>        y = x = <span class="hljs-built_in">rand</span>()%p;<br>        c = <span class="hljs-built_in">rand</span>()%p + <span class="hljs-number">2</span>;<br>        i = <span class="hljs-number">0</span>, j = <span class="hljs-number">1</span>, z = <span class="hljs-number">1</span>;<br>        <span class="hljs-keyword">while</span>(i++)&#123;<br>            x = (<span class="hljs-built_in">qmul</span>(x,x,p) + c) % p;<br>            z=<span class="hljs-built_in">qmul</span>(z, <span class="hljs-built_in">abs</span>(y-x), p);<br>            <span class="hljs-keyword">if</span>(x==y || !z) <span class="hljs-keyword">break</span>;<br>            <span class="hljs-keyword">if</span>(i%<span class="hljs-number">127</span>==<span class="hljs-number">0</span> || i&amp;(i<span class="hljs-number">-1</span>)==<span class="hljs-number">1</span>)&#123;<span class="hljs-comment">//分别在i=2^n 和 i%127==0时求gcd</span><br>                g = __gcd(z,p);<br>                <span class="hljs-keyword">if</span>(g &gt; <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> g;<br>                <span class="hljs-keyword">if</span>(i == j) y=x, j&lt;&lt;=<span class="hljs-number">1</span>;<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/acm/" class="category-chain-item">acm</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Pollard-Rho/">#Pollard Rho</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Pollard Rho</div>
+      <div>http://example.com/2023/02/20/Pollard Rho/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Cot287</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年2月20日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/02/20/Miller_Rabin/" title="Miller_Rabin">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Miller_Rabin</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/02/19/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%AE%BA/" title="计算机系统概论">
+                        <span class="hidden-mobile">计算机系统概论</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
