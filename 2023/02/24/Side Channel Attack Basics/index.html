@@ -16,22 +16,27 @@
   <meta name="author" content="Cot287">
   <meta name="keywords" content="">
   
-    <meta name="description" content="for own note">
+    <meta name="description" content="exclusively 单独地，专门地； trojan horses 特洛伊木马     malware 恶意软件 hack 非法侵入（他人计算机系统）   perspective 视角，观点； security exploits 安全漏洞   exploit 利用 information leakages 信息泄漏   Instead 相反 overview 概述，综述   prevale">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Cipolla 算法">
-<meta property="og:url" content="http://example.com/2023/02/20/Cipolla%20%E7%AE%97%E6%B3%95/index.html">
+<meta property="og:title" content="Side Channel Attack Basics">
+<meta property="og:url" content="http://example.com/2023/02/24/Side%20Channel%20Attack%20Basics/index.html">
 <meta property="og:site_name" content="Cot287&#39;s blog">
-<meta property="og:description" content="for own note">
+<meta property="og:description" content="exclusively 单独地，专门地； trojan horses 特洛伊木马     malware 恶意软件 hack 非法侵入（他人计算机系统）   perspective 视角，观点； security exploits 安全漏洞   exploit 利用 information leakages 信息泄漏   Instead 相反 overview 概述，综述   prevale">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-02-20T12:28:26.792Z">
-<meta property="article:modified_time" content="2023-02-24T09:04:05.145Z">
+<meta property="og:image" content="http://example.com/2023/02/24/Side%20Channel%20Attack%20Basics/1.PNG">
+<meta property="og:image" content="http://example.com/2023/02/24/Side%20Channel%20Attack%20Basics/2.jpg">
+<meta property="og:image" content="http://example.com/2023/02/24/Side%20Channel%20Attack%20Basics/3.png">
+<meta property="og:image" content="http://example.com/2023/02/24/Side%20Channel%20Attack%20Basics/4.png">
+<meta property="article:published_time" content="2023-02-24T09:03:39.529Z">
+<meta property="article:modified_time" content="2023-02-24T12:04:30.691Z">
 <meta property="article:author" content="Cot287">
-<meta property="article:tag" content="crypto 算法">
+<meta property="article:tag" content="SCA">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2023/02/24/Side%20Channel%20Attack%20Basics/1.PNG">
   
   
   
-  <title>Cipolla 算法 - Cot287&#39;s blog</title>
+  <title>Side Channel Attack Basics - Cot287&#39;s blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -201,7 +206,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Cipolla 算法"></span>
+            <span id="subtitle" data-typed-text="Side Channel Attack Basics"></span>
           
         </div>
 
@@ -212,8 +217,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-02-20 20:28" pubdate>
-          2023年2月20日 晚上
+        <time datetime="2023-02-24 17:03" pubdate>
+          2023年2月24日 下午
         </time>
       </span>
     
@@ -224,7 +229,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          0 字
+          6.2k 字
         
       </span>
     
@@ -235,7 +240,7 @@
         
         
         
-          1 分钟
+          52 分钟
         
       </span>
     
@@ -273,12 +278,144 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Cipolla 算法</h1>
+            <h1 style="display: none">Side Channel Attack Basics</h1>
             
             
               <div class="markdown-body">
                 
-                
+                <table>
+<thead>
+<tr>
+<th>exclusively</th>
+<th>单独地，专门地；</th>
+<th>trojan horses</th>
+<th>特洛伊木马</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>malware</td>
+<td>恶意软件</td>
+<td>hack</td>
+<td>非法侵入（他人计算机系统）</td>
+</tr>
+<tr>
+<td>perspective</td>
+<td>视角，观点；</td>
+<td>security exploits</td>
+<td>安全漏洞</td>
+</tr>
+<tr>
+<td>exploit</td>
+<td>利用</td>
+<td>information leakages</td>
+<td>信息泄漏</td>
+</tr>
+<tr>
+<td>Instead</td>
+<td>相反</td>
+<td>overview</td>
+<td>概述，综述</td>
+</tr>
+<tr>
+<td>prevalent</td>
+<td>盛行的，普遍的</td>
+<td>inherently</td>
+<td>内在地，固有地</td>
+</tr>
+<tr>
+<td>over-simplistic</td>
+<td>过于简单的</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>In electronic systems, security is often thought of exclusively at the software level.</p>
+<p>People generally consider exploits like trojan horses, malware, and other forms of hacking to be the biggest threats; however, security takes on a whole new meaning from the perspective of an EE.</p>
+<p>In reality, many of the biggest security threats are hardware-based, where attackers can steal information directly from the hardware that our secure and encrypted software runs on.</p>
+<p>One of the most potent hardware security threats is Side Channel Attack Basics.</p>
+<p>In this article, we’ll introduce the concept of SCAs, how they work, and why they’re so powerful.</p>
+</blockquote>
+<p>在电子系统中，人们往往只想到软件层面的安全。</p>
+<p>人们通常认为像特洛伊木马、恶意软件和其他形式的黑客攻击是最大的威胁；然而，从EE的角度来看，安全具有全新的意义。</p>
+<p>许多最大的安全威胁是基于硬件的，攻击者可以直接从我们安全和加密的软件运行的硬件上窃取信息。</p>
+<p>最有力的硬件安全威胁之一是侧信道攻击(SCA)。</p>
+<p>在这篇文章中，我们将介绍SCA的概念，它们是如何工作的，以及为什么它们如此强大。</p>
+<hr>
+<h3 id="side-channel-attack"><a class="markdownIt-Anchor" href="#side-channel-attack"></a> Side Channel Attack</h3>
+<blockquote>
+<p>Many forms of security exploits, both hardware and software, often focus on stealing secret information directly.</p>
+<p>On the other hand, side channel attacks are a classification of hardware-security attacks that focus on stealing information indirectly by exploiting unintended information leakages.</p>
+<p>As the name suggests, SCAs don’t obtain information by stealing it directly. Instead, they steal it via “side channels.” Examples of SCAs can be seen in Figure 1.</p>
+</blockquote>
+<p>许多形式的安全漏洞，包括硬件和软件，往往集中在直接窃取秘密信息。</p>
+<p>另一方面，侧信道攻击是硬件安全攻击的一种分类，主要是通过利用非预期的信息泄漏来间接窃取信息。</p>
+<p>顾名思义，SCA不通过直接窃取信息来获得信息。相反，他们通过 &quot;旁门左道 &quot;窃取信息。图1中可以看到SCA的例子。</p>
+<img src="/2023/02/24/Side%20Channel%20Attack%20Basics/1.PNG" srcset="/img/loading.gif" lazyload alt="1" style="zoom:67%;"> 
+<p><strong>Figure 1.</strong> A high-level overview of a side channel attack.</p>
+<blockquote>
+<p>SCAs are so prevalent because electronic systems inherently have an abundance of leakages (i.e., side channels).</p>
+<p>Some of these side channels include:</p>
+<ul>
+<li><strong>Power:</strong> All electronic devices are supplied power through a power rail. In a power-based side channel attack, an attacker would monitor a device’s power rails during operation for either current draw or fluctuations in voltage to steal information.</li>
+<li><strong>Electromagnetic (EM) Radiation:</strong> As Faraday’s Law defines, electric currents generate a corresponding magnetic field. An EM-based side channel attack, shown in Figure 2, leverages this fact by monitoring the EM radiation emitted from a device during operation to steal information.</li>
+<li><strong>Timing Attacks:</strong> In cryptographic implementations, different mathematical operations may take varying amounts of time to compute based on inputs, key values, and the operation themselves. Timing attacks seek to exploit these timing variations to steal information.</li>
+</ul>
+</blockquote>
+<p>SCA 之所以如此普遍，是因为电子系统固有地存在大量泄漏（即侧通道）。</p>
+<p>这些侧信道包括：</p>
+<ul>
+<li>电源： 所有电子设备都通过电源轨供电。在基于功率的侧信道攻击中，攻击者将在运行期间监控设备的电源轨，以获取电流消耗或电压波动以窃取信息。</li>
+<li>电磁 (EM) 辐射：正如法拉第定律所定义的，电流会产生相应的磁场。图 2 所示的基于 EM 的侧信道攻击通过监控设备在运行期间发出的 EM 辐射来窃取信息，从而利用这一事实。</li>
+<li>时序攻击：在加密实现中，不同的数学运算可能需要不同的时间来计算，具体取决于输入、键值和运算本身。时序攻击试图利用这些时序变化来窃取信息。</li>
+</ul>
+<img src="/2023/02/24/Side%20Channel%20Attack%20Basics/2.jpg" srcset="/img/loading.gif" lazyload alt="2" style="zoom:67%;">
+<p><strong>Figure 2.</strong> An EM attack setup where the attacker is placing an antenna directly above a device’s processor.</p>
+<hr>
+<h3 id="example"><a class="markdownIt-Anchor" href="#example"></a> Example</h3>
+<blockquote>
+<p>To better understand how a side channel attack might work, we’ll look at an over-simplistic but helpful example.</p>
+<p>Consider a CMOS inverter, as shown in Figure 3. In this example, consider that the input to the inverter is a binary string representing sensitive data, say a cryptographic key, and the attacker’s goal is to figure out what this key is.</p>
+</blockquote>
+<p>为了更好地理解侧信道攻击的工作原理，我们将看一个过于简单但很有帮助的例子。</p>
+<p>考虑一个 CMOS 反相器，如图 3 所示。在此示例中，考虑到反相器的输入是表示敏感数据的二进制字符串，例如加密密钥，攻击者的目标是找出这个密钥是什么。</p>
+<img src="/2023/02/24/Side%20Channel%20Attack%20Basics/3.png" srcset="/img/loading.gif" lazyload alt="3" style="zoom:67%;">
+<p><strong>Figure 3.</strong> A CMOS inverter is driven by a square wave</p>
+<p>Further, assume that the attacker does not have direct probing access to both the input and output (the input and output, in this example, would be the direct-channel).</p>
+<p>This assumption may be realistic, as the logic gates and copper conductors within an integrated circuit are hidden by device packaging and cannot be directly probed without decapsulation. However, in this situation, our attacker has access to the device’s power rail, which is a realistic assumption as power rails are often global and provided to the IC on the PCB level (i.e., the attacker can probe the power rail directly on the PCB).</p>
+<p>By performing a power-based side channel attack, our adversary can figure out the input string simply by probing the current draw from the 3.3 V power rail (or equivalently by probing the current return to ground).</p>
+<p>Looking at the input and power waveforms in Figure 4, we can see a deterministic pattern in the device’s current consumption. When there is a high to low transition (1 to 0) in the input, there is a spike in the device’s current draw.</p>
+<blockquote>
+<p>此外，假设攻击者没有对输入和输出的直接探测权限（在这个例子中，输入和输出将是直接通道）。</p>
+<p>这个假设可能是现实的，因为集成电路内的逻辑门和铜导体被器件封装所隐藏，如果不解封就不能直接探测。然而，在这种情况下，攻击者可以接触到器件的电源轨，这是一个现实的假设，因为电源轨通常是全局的，并在PCB层面提供给集成电路（即攻击者可以直接探测PCB上的电源轨）。</p>
+<p>通过执行基于功率的侧信道攻击，我们的对手可以通过探测 3.3V 电源轨的电流消耗（或等效地通过探测接地电流）来计算输入串。</p>
+<p>查看图 4 中的输入和功率波形，我们可以看到器件电流消耗的确定性模式。当输入中出现从高到低的转换（1 到 0）时，器件的电流消耗会出现尖峰。</p>
+</blockquote>
+<img src="/2023/02/24/Side%20Channel%20Attack%20Basics/4.png" srcset="/img/loading.gif" lazyload alt="4" style="zoom:67%;">
+<p><strong>Figure 4.</strong> The top plot shows the input signal, the bottom plot shows the inverter’s current draw from the 3.3V rail.</p>
+<p>From looking exclusively at the current waveforms, our attacker can quickly determine that the input signal must be 10101010. In this way, the attacker exploits a side channel, successfully stealing our secret key without knowing any other prior information about the input, output, or what operation the device is performing.</p>
+<blockquote>
+<p>通过只查看当前波形，攻击者可以快速确定输入信号一定是10101010。这样，攻击者利用了一个侧信道，成功地窃取了密钥，而无需知道任何其他关于输入、输出或设备正在执行什么操作。</p>
+</blockquote>
+<hr>
+<h3 id="what-makes-side-channel-attacks-so-powerful"><a class="markdownIt-Anchor" href="#what-makes-side-channel-attacks-so-powerful"></a> What Makes Side Channel Attacks So Powerful?</h3>
+<p>Side channel attacks are a uniquely powerful form of attack for a variety of reasons.</p>
+<p>Firstly, SCAs are so powerful because they are hard to prevent. SCAs exploit electronics’ unintended and largely unavoidable behavior—things like a device’s power consumption and EM radiation are inherent and unavoidable.</p>
+<p>At best, a designer can obscure these side channels, but they can never remove them completely, making SCAs very hard to prevent. Another reason is that many SCAs are very hard to detect.</p>
+<p>Since many SCAs, like an EM attack, are passive and non-invasive, an attacker using doesn’t need to interfere with the device at all physically. For this reason, it is near impossible, from an electrical standpoint, to detect that your device is under attack or that it was previously compromised.</p>
+<p>Finally, SCAs are becoming increasingly powerful today thanks to the development of Machine Learning (ML). Whereas historical SCAs required rigorous, statistical analysis of leakage information, many of today’s side-channel attacks leverage ML instead.</p>
+<p>By training an ML model with a large enough dataset of leakage information, attackers can develop potent and easy-to-use attacks.</p>
+<blockquote>
+<p>出于各种原因， 侧信道攻击是一种独特的强大攻击形式。</p>
+<p>首先，SCA 之所以如此强大，是因为它们难以预防。SCA 利用电子设备的无意且在很大程度上不可避免的行为——诸如设备的功耗和 EM 辐射之类的事情是固有且不可避免的。</p>
+<p>充其量，设计师可以掩盖这些侧通道，但他们永远无法完全消除它们，这使得 SCA很难预防。另一个原因是许多 SCA 很难检测到。</p>
+<p>由于许多 SCA（如 EM 攻击）是被动且非侵入性的，因此攻击者使用时根本不需要对设备进行物理干预。出于这个原因，从电气角度来看，几乎不可能检测到您的设备受到攻击或之前已被入侵。</p>
+<p>最后，由于机器学习（ML）的发展，如今SCA正变得越来越强大。历史上的SCA需要对泄漏信息进行严格的统计分析，而今天的许多侧面通道攻击则利用了ML。</p>
+<p>通过使用足够大的泄漏信息数据集训练 ML 模型，攻击者可以开发出强大且易于使用的攻击。</p>
+</blockquote>
+
                 
               </div>
             
@@ -311,7 +448,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/crypto-%E7%AE%97%E6%B3%95/">#crypto 算法</a>
+        <a href="/tags/SCA/">#SCA</a>
       
     </div>
   
@@ -323,8 +460,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Cipolla 算法</div>
-      <div>http://example.com/2023/02/20/Cipolla 算法/</div>
+      <div>Side Channel Attack Basics</div>
+      <div>http://example.com/2023/02/24/Side Channel Attack Basics/</div>
     </div>
     <div class="license-meta">
       
@@ -336,7 +473,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年2月20日</div>
+          <div>2023年2月24日</div>
         </div>
       
       
@@ -368,18 +505,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/02/20/%E6%B4%9B%E8%B0%B7%E6%95%B0%E5%AD%A6%E6%A8%A1%E5%9D%971/" title="洛谷数学模块1">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">洛谷数学模块1</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/02/20/BSGS%20%E7%AE%97%E6%B3%95/" title="BSGS">
-                        <span class="hidden-mobile">BSGS</span>
+                      <a href="/2023/02/23/Nim%E6%B8%B8%E6%88%8F/" title="Nim 游戏">
+                        <span class="hidden-mobile">Nim 游戏</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
