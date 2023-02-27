@@ -1,0 +1,2539 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Cot287">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Passage is from CHES 2022            concrete 确实的，具体的； cryptanalytic 密码分析的   propose 提出 additional 附加的，额外的   exhaustive 详尽的，彻底的；消耗的 carry out 执行，实行；贯彻；实现；完成   dataset 数据集">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Guessing Bits Improved Lattice Attacks on (EC)DSA with Nonce Leakage">
+<meta property="og:url" content="http://example.com/2023/02/27/Note%20for%20%E3%80%8AGuessing%20Bits%20Improved%20Lattice%20Attacks%20on%20(EC)DSA%20with%20Nonce%20Leakage%E3%80%8B/index.html">
+<meta property="og:site_name" content="Cot287&#39;s blog">
+<meta property="og:description" content="Passage is from CHES 2022            concrete 确实的，具体的； cryptanalytic 密码分析的   propose 提出 additional 附加的，额外的   exhaustive 详尽的，彻底的；消耗的 carry out 执行，实行；贯彻；实现；完成   dataset 数据集">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-02-27T12:13:21.595Z">
+<meta property="article:modified_time" content="2023-02-27T14:37:36.469Z">
+<meta property="article:author" content="Cot287">
+<meta property="article:tag" content="DSA">
+<meta property="article:tag" content="ECDSA">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Guessing Bits Improved Lattice Attacks on (EC)DSA with Nonce Leakage - Cot287&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/katex@0.11.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Guessing Bits Improved Lattice Attacks on (EC)DSA with Nonce Leakage"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-02-27 20:13" pubdate>
+          2023年2月27日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          47k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          392 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Guessing Bits Improved Lattice Attacks on (EC)DSA with Nonce Leakage</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p><strong>Passage is from CHES 2022</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>concrete</td>
+<td>确实的，具体的；</td>
+<td>cryptanalytic</td>
+<td>密码分析的</td>
+</tr>
+<tr>
+<td>propose</td>
+<td>提出</td>
+<td>additional</td>
+<td>附加的，额外的</td>
+</tr>
+<tr>
+<td>exhaustive</td>
+<td>详尽的，彻底的；消耗的</td>
+<td>carry out</td>
+<td>执行，实行；贯彻；实现；完成</td>
+</tr>
+<tr>
+<td>dataset</td>
+<td>数据集</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="guessing-bits-improved-lattice-attacks-on-ecdsa-with-nonce-leakage"><a class="markdownIt-Anchor" href="#guessing-bits-improved-lattice-attacks-on-ecdsa-with-nonce-leakage"></a> Guessing Bits: Improved Lattice Attacks on (EC)DSA with Nonce Leakage</h3>
+<h4 id="abstract"><a class="markdownIt-Anchor" href="#abstract"></a> abstract</h4>
+<p>The lattice reduction attack on (EC)DSA (and other <mark>Schnorr-like</mark> signature schemes) with partially known <mark>nonces</mark>, originally due to Howgrave-Graham and Smart,has been at the core of many concrete <mark>cryptanalytic</mark> works, side-channel based or otherwise, in the past 20 years. The attack itself has seen limited development,however: improved analyses have been carried out, and the use of stronger lattice reduction algorithms has pushed the range of practically vulnerable parameters further, but the lattice construction based on the signatures and known nonce bits remain the same.</p>
+<blockquote>
+<p><strong>nonce</strong></p>
+<p>nonce : number once，表示只被使用一次的随机数值</p>
+</blockquote>
+<p>In this paper, we <mark>propose</mark> a new idea to improve the attack based on the same data in exchange for additional computation: carry out an exhaustive search on some bits of the secret key. This turns the problem from a single bounded distance decoding (BDD) instance in a certain lattice to multiple BDD instances in a fixed lattice of larger volume but with the same bound (making the BDD problem substantially easier). Furthermore, the fact that the lattice is fixed lets us use batch/preprocessing variants of BDD solvers that are far more efficient than repeated lattice reductions on non-preprocessed lattices of the same size. As a result, our analysis suggests that our technique is competitive or outperforms the state of the art for parameter ranges corresponding to the limit of what is achievable using lattice attacks so far (around 2-bit leakage on 160-bit groups, or 3-bit leakage on 256-bit groups).</p>
+<blockquote>
+<p><strong>BDD（Bounded Distance Decoding）问题</strong></p>
+<p>BDD问题规定了<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mo>&lt;</mo><msub><mi>λ</mi><mn>1</mn></msub><mo stretchy="false">(</mo><mi>L</mi><mo stretchy="false">)</mo><mi mathvariant="normal">/</mi><mn>2</mn></mrow><annotation encoding="application/x-tex">d&lt;\lambda_1(L)/2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.73354em;vertical-align:-0.0391em;"></span><span class="mord mathnormal">d</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal">λ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathnormal">L</span><span class="mclose">)</span><span class="mord">/</span><span class="mord">2</span></span></span></span>，也就是说<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi></mrow><annotation encoding="application/x-tex">d</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathnormal">d</span></span></span></span>小于最短向量的一半。并且这个<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><mi>V</mi><mi>P</mi></mrow><annotation encoding="application/x-tex">CVP</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span></span></span></span>问题最多只有一个唯一的解（at most 1 solution），并且这个解一定是距离<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.61508em;vertical-align:0em;"></span><span class="mord mathnormal">t</span></span></span></span>最近的格点</p>
+</blockquote>
+<p>We also show that variants of this idea can also be applied to bits of the nonces (leading to a similar improvement) or to filtering signature data (leading to a data-time trade-off for the lattice attack). Finally, we use our technique to obtain an improved exploitation of the TPM–FAIL dataset similar to what was achieved in the Minerva attack.</p>
+<p>Trade-Off <em>·</em> Cryptanalysis</p>
+<p><strong>1 Introduction</strong></p>
+<p>A lattice is a discrete group of points in space, which can be defifined as the set of all</p>
+<p>integer linear combinations of a certain set of linearly independent vectors <strong>b</strong>1*, . . . ,* <strong>b</strong><em>d</em></p>
+<p>known as a basis. A lattice has infifinitely many bases, but so-called “reduced” bases,</p>
+<p>that consist of short and close to orthogonal vectors, are much more interesting. Lattice</p>
+<p>reduction, the mathematical problem of fifinding such bases, has a long history which</p>
+<p>can be traced back to the 18th century, but gained particular prominence after Lenstra,</p>
+<p>Lenstra and Lovász [LLL82] introduced a polynomial-time approximate algorithm for it</p>
+<p>in 1982 that became known as LLL. Since the advent of LLL, lattice reduction proved to</p>
+<p>be a powerful tool for cryptanalysis: early examples include attacks on knapsack-based</p>
+<p>Licensed under Creative Commons License CC-BY 4.0.</p>
+<p>Received: 2021-07-15 Accepted: 2021-09-15 Published: 2021-11-19392 Guessing Bits: Improved Lattice Attacks on (EC)DSA with Nonce Leakage</p>
+<p>cryptosystems [Sha82] and Coppersmith’s small root fifinding algorithm [Cop97] that broke</p>
+<p>many variants of RSA in particular.</p>
+<p>This paper focuses on another major cryptanalytic application of lattice reduction:</p>
+<p>lattice attacks against (EC)DSA (and related signature schemes like Schnorr’s) when</p>
+<p>bits of the nonce are known. DSA and ECDSA are well-established standards for digital</p>
+<p>signature based on the discrete logarithm problem, and that involve the use, for each</p>
+<p>generated signature, of some fresh random value called the <em>nonce</em>. It is well-known that</p>
+<p>if the same nonce is used twice, the adversary can directly compute the private key due</p>
+<p>to a linear relation between the nonce and the private signing key. Even worse, <em>partial</em></p>
+<p>information about the nonces of multiple signatures can lead to recovery of the full private</p>
+<p>key. The original approach to do so, due to Bleichenbacher, actually relied on discrete</p>
+<p>Fourier analysis techniques [Ble00, DHMP13, AFG+14b, TTA18, ANT+20], but lattice</p>
+<p>reduction was also discovered to provide an attack technique, in connection to Boneh and</p>
+<p>Venkatesan’s hidden number problem (HNP) [BV96].</p>
+<p>HNP is a number theoretic problem that was originally introduced to establish bit</p>
+<p>security results for the Diffiffiffie–Hellman key exchange. Boneh and Venkatesan showed that it</p>
+<p>could be seen as a bounded distance decoding (BDD) instance in a lattice, which could be</p>
+<p>solved with Babai’s nearest plane algorithm [Bab86] for suitable parameters. Subsequently,</p>
+<p>Howgrave-Graham and Smart [HGS01], and later Shparlinski and Nguyen [NS02], observed</p>
+<p>that the problem of attacking (EC)DSA if some top or bottom bits of the nonces are</p>
+<p>known is an instance of HNP, and could be attacked using the same lattice techniques.</p>
+<p>However, when nonce leakage is very small, the attack becomes much more diffiffifficult mainly</p>
+<p>because the hidden lattice vector in BDD is not very close to the target vector. It took</p>
+<p>signifificant development in lattice reduction algorithms to advance the state of the art. In</p>
+<p>2013, Liu and Nguyen [LN13] were able to attack 160-bit DSA with 2-bit nonce leakage</p>
+<p>using the BKZ 2.0 algorithm introduced just a few years earlier [CN11], relying on a</p>
+<p>very high block size of 90, with pruned enumeration as the SVP oracle. In a very recent</p>
+<p>work [AH21], Albrecht and Heninger utilize the state-of-the-art lattice reduction algorithm</p>
+<p>G6K [ADH+19] together with the novel idea of predicate sieving to break new records.</p>
+<p><strong>1.1 Our Contributions</strong></p>
+<p>Lattice attacks on (EC)DSA are in general <em>all-or-nothing</em>, in the sense that the attack</p>
+<p>reveals the entire secret key when it succeeds, and nothing at all otherwise. In contrast,</p>
+<p>Bleichenbacher’s statistical attack, for example, only reveals some bits of the secret key in</p>
+<p>a single execution; however, it has been observed in previous work that the knowledge of</p>
+<p>those bits makes subsequent applications of the attack much more effiffifficient.</p>
+<p>How the knowledge of some bits of the secret key affffects lattice attacks on (EC)DSA,</p>
+<p>however, does not appear to have been considered in previous work1 . Perhaps interestingly,</p>
+<p>we observe that knowledge of some bits of the secret <em>does</em> in fact make the attack easier.</p>
+<p>This results in a simple idea to improve those attacks, which forms the main contribution</p>
+<p>of this paper: <em>guess</em> some bits of the secret key, and solve the resulting, easier lattice</p>
+<p>problem for each possible guess (in other words: carry out an exhaustive search on those</p>
+<p>bits).</p>
+<p>An interesting feature of this approach is that this reduces the attack to solving many</p>
+<p>BDD instances with varying target vectors in the <em>same</em> lattice, making it possible to</p>
+<p>rely on various batch-CVP or CVP-with-preprocessing techniques to solve them. At the</p>
+<p>1How the knowledge of certain types of side information on the secret affffects the hardness of <em>lattice</em></p>
+<p><em>problems</em> like LWE has been considered, e.g., in [DDGR20]. The context of HNP/nonce leakage, however,</p>
+<p>is very difffferent: for example, the key in our setting is an element of Z<em>q</em>, as opposed to a vector in LWE;</p>
+<p>the nature of the hints (bits vs. linear relations) is difffferent; the lattice is very structured (knapsack-like)</p>
+<p>for HNP, as opposed to random <em>q</em>-ary for LWE; the BDD parameters are totally dissimilar; the analysis in</p>
+<p>their case depends on Gaussian noise, etc. So the two questions appear to be mostly unrelated.Chao Sun, Thomas Espitau, Mehdi Tibouchi and Masayuki Abe 393</p>
+<p><strong>Table 1:</strong> Tractable parameters for lattice attacks on (EC)DSA.</p>
+<p>Nonce leakage</p>
+<p>Modulus 4-bit 3-bit 2-bit 1-bit</p>
+<p>160-bit Easy Easy [LN13], [AH21], Ours Hard</p>
+<p>256-bit Easy [AH21], Ours Hard Hard</p>
+<p>384-bit [AH21], Ours Hard Hard Hard</p>
+<p>simplest level, even just carrying out an initial lattice reduction on the original BDD lattice,</p>
+<p>and then solving all the BDD instances by reduction to SVP using Kannan’s embedding</p>
+<p>technique turns out to be far more effiffifficient than naively solving the SVP instances without</p>
+<p>the initial common lattice reduction.</p>
+<p>Additionally, this approach parallelizes very easily, and has the convenient property of</p>
+<p>being very easy to simulate (in the sense that one can certainly make the “correct” guess</p>
+<p>for self-generated instances), which makes its cost easy to predict even for parameters that</p>
+<p>are impractical to fully run in a short time.</p>
+<p>As additional contributions, we also show that the same idea can be applied to guessing</p>
+<p>additional bits of some of the signature nonces (on top of those already known; this</p>
+<p>results in a similar, but usually slightly worse, success-time trade-offff than guessing bits of</p>
+<p>the secret key), as well as fifiltering some of the signatures to construct lattices that are</p>
+<p>easier to attack (resulting in a data-time trade-offff reminiscent to what can be achieved</p>
+<p>in Bleichenbacher’s attack). Furthermore, we carry out experiments on the TPM–FAIL</p>
+<p>dataset [MSEH20] and apply our techniques to key recovery. While the original attack</p>
+<p>requires about 40000 signatures, with the method of guessing bits, we are able to recover</p>
+<p>the secret key with only around 800 signatures, which is comparable to the results achieved</p>
+<p>in Minerva [JSSS20].</p>
+<p><strong>1.2 Related Work</strong></p>
+<p>The main question that we consider, namely how small of a nonce leakage do we need to</p>
+<p>recover the signing key in (EC)DSA, has been considered in previous work both for lattice</p>
+<p>attacks and for Bleichebacher’s attack. In the case of lattice attacks, the record-holding</p>
+<p>works are due to Liu and Nguyen [LN13] and very recently Albrecht and Heninger [AH21].</p>
+<p>In the case of Bleichenbacher’s attack, the state of the art is presented in [ANT+20]. We</p>
+<p>brieflfly describe below how our results compares to theirs.</p>
+<p><strong>Comparison with [<strong><strong>LN13</strong></strong>] and [<strong><strong>AH21</strong></strong>].</strong> Table 1 presents typical parameters (in terms of</p>
+<p>group size and number of known nonce bits) for (EC)DSA, and indicates whether they</p>
+<p>can be tackled easily with lattice attacks (“Easy”), are considered hard so far with lattices</p>
+<p>(“Hard”), or have been solved in specifific papers. In [LN13] and [AH21], strong lattice</p>
+<p>reduction algorithms (BKZ 2.0 and G6K with predicate respectively) are used to attack</p>
+<p>the “borderline” cases, namely 160-bit modulus with 2-bit nonce leakage, 256-bit modulus</p>
+<p>with 3-bit nonce leakage and 384-bit modulus with 4-bit nonce leakage. Our approach all</p>
+<p>makes those borderline cases tractable, but relies on very difffferent techniques and arguably</p>
+<p>present various advantages, particularly the following:</p>
+<p><em>•</em> whereas [LN13] and [AH21] are based on specifific improvements and modififications</p>
+<p>of the underlying lattice reduction algorithms, our approach works with any lattice</p>
+<p>reduction algorithm. In our experiments, we use fplll’s implementation of BKZ–30,</p>
+<p>but any algorithm would work. In particular, it is straightforward to combine our</p>
+<p>idea with the techniques of those two papers if so desired;394 Guessing Bits: Improved Lattice Attacks on (EC)DSA with Nonce Leakage</p>
+<p><em>•</em> tailoring the parameters of [</p>
+<p>LN13] and [AH21] to a specifific problem instance or</p>
+<p>to the specifific computational resources of the attack can be quite challenging; in</p>
+<p>contrast, due to its straightforward simulatability mentioned above, our approach</p>
+<p>makes this easy, and makes it possible to quantify the cost of attacking a given</p>
+<p>problem instance in very concrete terms in advance.</p>
+<p><strong>Comparison with Bleichenbacher’s attack.</strong> Although we come up with an approach to</p>
+<p>improve lattice attacks with more signatures and in some sense bridge the gap between</p>
+<p>lattice attacks and Bleichenbacher’s, it still requires too many signatures compared with</p>
+<p>Bleichenbacher’s attack. For instance, for 160-bit (EC)DSA with 2-bit nonce leakage,</p>
+<p>our method requires 2 27 signatures, while the Bleichenbacher attack requires about 2 12</p>
+<p>signatures for 2-bit leakage case and 2 27 signatures for the one-bit leakage case [ANT+20].</p>
+<p>Besides, with this approach, we still could not attack harder cases, such as 160-bit modulus</p>
+<p>with 1-bit nonce leakage and 256-bit modulus with 2-bit nonce leakage, which are already</p>
+<p>tractable using Bleichenbacher’s attack [AFG+14b, TTA18, ANT+20]. However, the fact</p>
+<p>that there exists a way of improving lattice attacks with more signatures might give some</p>
+<p>ideas for future work. It is still possible that better ways of utilizing more signatures</p>
+<p>for lattice attacks exist, and we hope that lattice attacks on (EC)DSA could be further</p>
+<p>improved.</p>
+<p><strong>2 Preliminaries</strong></p>
+<p><strong>2.1 Lattices</strong></p>
+<p>A <em>lattice</em>2 is an additive subgroup of Z <em>n</em> for some <em>n</em> <em>≥</em> 0. For any family of linearly</p>
+<p>independent vectors <strong>b</strong>1*, . . . ,* <strong>b</strong><em>m</em> of Z <em>n</em>, the set:</p>
+<p><em>L</em>(<strong>b</strong>1*, . . . ,* <strong>b</strong><em>n</em>) = n</p>
+<p><em>n</em></p>
+<p>X</p>
+<p><em>i</em>=1</p>
+<p><em>c<strong>i</strong></em>b<strong><em>i</em> : *c</strong>i* <em>∈</em> Z o</p>
+<p>is a lattice, and conversely, any lattice <em>L ⊂</em></p>
+<p>Z <em>n</em></p>
+<p>can be put in that form for some vectors</p>
+<p><strong>b</strong>1*, . . . ,* <strong>b</strong><em>m</em>. In that case, the family (<strong>b</strong>1</p>
+<p><em>, . . . ,</em></p>
+<p><strong>b</strong></p>
+<p><em>m</em>) is called a basis of <em>L</em>. We can then</p>
+<p>represent the lattice <em>L</em> by the <em>m</em> <em>×</em> <em>n</em> matrix <em>B</em> whose rows are formed by the vectors <strong>b</strong><em>i</em> ,</p>
+<p>and write <em>L</em> = <em>L</em>(<em>B</em>).</p>
+<p>A given lattice</p>
+<p><em>L</em></p>
+<p>can have infifinitely many distinct bases, but they all have the same</p>
+<p>cardinality <em>m</em>, called the</p>
+<p><em>rank</em> of</p>
+<p><em>L</em>. In this paper, we will only consider <em>full-rank</em> lattices,</p>
+<p>whose rank <em>m</em> is equal to <em>n</em>, the dimension of the ambient space. For a full-rank lattice</p>
+<p><em>L</em></p>
+<p>with basis matrix <em>B</em>, we defifine the volume of <em>L</em> as the quantity:</p>
+<p>vol(<em>L</em>) = <em>|</em> det(<em>B</em>)<em>|**,</em></p>
+<p>which does <em>not</em> depend on the choice of <em>B</em>.</p>
+<p>The Euclidean norm of the shortest non-zero vector in <em>L</em> is called the fifirst minimum of</p>
+<p><em>L</em></p>
+<p>and denoted as <em>λ</em>1(<em>L</em>). More generally, for</p>
+<p>1 <em>≤</em> <em>i</em> <em>≤</em> <em>n</em>, the <em>i</em>-th minimum <em>λ**i</em>(<em>L</em>)</p>
+<p>of <em>L</em> is</p>
+<p>defifined as the minimum radius</p>
+<p><em>r</em> such that a ball centered at origin with radius</p>
+<p><em>r</em> contains</p>
+<p><em>i</em> linearly independent vectors.</p>
+<p>It is proved in [Ajt06] that a random <em>n</em>-dimensional lattice satisfifies, with high proba</p>
+<p>bility,</p>
+<p><em>∀</em>1 <em>≤</em> <em>i</em> <em>≤</em> <em>n, λ**i</em>(<em>L</em>) <em>≈</em> r 2 <em>n πe</em> vol(<em>L</em>) 1*/n* <em>.</em></p>
+<p>2This is more properly the defifinition of an <em>integral</em> lattice, but integral lattices are the only ones we</p>
+<p>consider in this paper.Chao Sun, Thomas Espitau, Mehdi Tibouchi and Masayuki Abe 395</p>
+<p>The approximation factor of a lattice basis <strong>b</strong>1*, . . . ,* <strong>b</strong><em>n</em> is defifined as <em>k</em></p>
+<p><strong>b</strong></p>
+<p>1</p>
+<p><em>k</em></p>
+<p><em>λ</em></p>
+<p>1</p>
+<p>(</p>
+<p><em>L</em></p>
+<p>) (where <em>k·k</em></p>
+<p>hence</p>
+<p>forth denotes the Euclidean norm), and the root Hermite factor is defifined as ( <em>k</em> <strong>b</strong></p>
+<p>1</p>
+<p><em>k</em></p>
+<p>vol(<em>L</em></p>
+<p>) 1*/n*</p>
+<p>) 1*/n*.</p>
+<p>There are many computational problems related to lattices. The most famous one is</p>
+<p>the Shortest Vector Problem (SVP for short): given a lattice <em>L</em>, fifind the shortest vector</p>
+<p><strong>v</strong> <em>∈</em> <em>L</em> such that <em>k</em> <strong>v</strong><em>k</em> = <em>λ</em></p>
+<p>1(<em>L</em>). Another problem is the Closest Vector Problem (CVP for</p>
+<p>short): given a lattice <em>L</em></p>
+<p>and a target vector</p>
+<p><strong>t</strong>, fifind the vector <strong>v</strong> <em>∈</em> <em>L</em> such that <em>k</em> <strong>v</strong> <em>−</em> <strong>t</strong><em>k</em> is</p>
+<p>minimal.</p>
+<p>There exist effiffifficient lattice algorithms for solving approximate versions of SVP and</p>
+<p>CVP. For approximate SVP, lattice reduction algorithms such as LLL [LLL82] and BKZ</p>
+<p>[SE94] output lattice basis <strong>b</strong>1*, . . . ,* <strong>b</strong><em>n</em> such that the approximation factor and the root</p>
+<p>Hermite factor are relatively small. As a result, the fifirst vector <strong>b</strong>1 of the reduced basis</p>
+<p>is a good approximation of the shortest non-zero vector. For approximate CVP, Babai’s</p>
+<p>nearest plane algorithm [Bab86] and variants of it such as [Kle00, GPV08, EK20] can be</p>
+<p>used to fifind a relatively close vector when applied after a lattice reduction algorithm.</p>
+<p><strong>2.2 Hidden Number Problem</strong></p>
+<p>The Hidden Number Problem can be described as follows: <em>q, l</em> are fifixed integers known to</p>
+<p>the public and <em>α</em> is a unknown integer in Z<em>q</em>. For many known random <em>t</em> <em>∈</em></p>
+<p>Z</p>
+<p><em>q</em>, we have</p>
+<p>an oracle</p>
+<p><em>O**α</em>(<em>t</em>) that on input</p>
+<p><em>t</em>, outputs</p>
+<p>(<em>t, u</em>) such that</p>
+<p>*|*<em>α</em> <em>·</em></p>
+<p><em>t</em></p>
+<p><em>−</em></p>
+<p><em>u</em>*|*<em>q</em> <em>&lt; q/</em></p>
+<p>2 <em>l</em></p>
+<p>, where</p>
+<p>*|<strong>z</strong>|*<em>q</em></p>
+<p>represents the unique integer</p>
+<p>0 <em>≤</em></p>
+<p><em>x &lt; q</em> such that</p>
+<p><em>x</em> <em>≡</em> <em>z</em> mod</p>
+<p><em>q</em>. The goal is to recover the</p>
+<p>hidden secret key <em>α</em>. Suppose that we have queried the oracle</p>
+<p><em>d</em></p>
+<p>times and have</p>
+<p><em>d</em> pairs</p>
+<p>(<em>t**i</em> <em>, u**i</em>) (<em>i</em> = 1*,* 2*, . . . , d*), we could transform this into a lattice problem. Construct a lattice</p>
+<p><em>L</em> spanned by the following matrix <em>B</em>:</p>
+<p><em>B</em> =</p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p>2 <em>l</em> <em>q</em> 0 <em>· · ·</em> 0 0</p>
+<p>0 2</p>
+<p><em>l</em></p>
+<p><em>q</em></p>
+<p><em>· · ·</em></p>
+<p>0 0</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>0 0</p>
+<p><em>· · ·</em></p>
+<p>2</p>
+<p><em>l</em></p>
+<p><em>q</em></p>
+<p>0</p>
+<p>2 <em>l</em></p>
+<p><em>t</em>1 2 <em>l</em></p>
+<p><em>t</em></p>
+<p>2</p>
+<p><em>· · ·</em> 2</p>
+<p><em>l</em></p>
+<p><em>t</em></p>
+<p><em>d</em></p>
+<p>1</p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p>Since <em>|<strong>αt</strong>i</em> <em>−</em> <em>u**i</em> <em>|<em><em>q</em> *&lt; q/*2 <em>l</em> , there exists some integer *c</em>*i</em> such that <em>|<strong>αt</strong>i</em> <em>−</em> <em>u**i</em> + <em>c<strong>i</strong>q</em>*|* *&lt; q/*2 <em>l</em> ,</p>
+<p>so <em>|<em>2 <em>l<strong>αt</strong>i</em> <em>−</em> 2 <em>l<strong>u</strong>i</em> + 2</em>l</em> <em>c<strong>i</strong>q</em>*|* <em>&lt; q</em>, and <strong>h</strong> = (2<em>l**αt</em>1 + <em>c</em>12 <em>l</em> <em>q,</em> 2 <em>l**αt</em>2 + <em>c</em>22 <em>l</em> <em>q, . . . ,</em> 2 <em>l<strong>αt</strong>d</em> + <em>c**d</em>2 <em>l</em> <em>q, α</em>)</p>
+<p>is a lattice vector (which we call the hidden lattice vector) in</p>
+<p><em>L</em>, and set the target</p>
+<p>vector <strong>v</strong> = (2<em>l**u</em>1*,* 2 <em>l**u</em>2*, . . . ,* 2 <em>l<strong>u</strong>d</em>*,* 0). Denote the difffference vector</p>
+<p><strong>h</strong> <em>−</em> <strong>v</strong> as <strong>e</strong>. Since</p>
+<p><em>|<em>2 <em>l<strong>αt</strong>i</em> <em>−</em> 2 <em>l<strong>u</strong>i</em> + 2</em>l</em> <em>c</em></p>
+<p><em>i**q</em></p>
+<p><em>|</em> <em>&lt; q</em> (<em>i</em> = 1*,*</p>
+<p>2*, . . . , d*), it is easy to know that the absolute value of</p>
+<p>each coeffiffifficient of</p>
+<p><strong>e</strong></p>
+<p>is less than</p>
+<p><em>q</em>. Therefore, the Euclidean norm of</p>
+<p><strong>e</strong> is at most <em>q</em> <em>√</em> <em>d</em> + 1.</p>
+<p>When <em>l</em> is not too small, the target vector <strong>v</strong> is a close vector to the lattice <em>L</em>, so this</p>
+<p>becomes a CVP instance (or more precisely, BDD instance). Generally, there are two</p>
+<p>ways to solve the HNP, i.e., the CVP approaches and SVP approaches. In the original</p>
+<p>paper by Boneh and Venkatesan, they use the LLL algorithm to reduce the lattice basis</p>
+<p>and Babai’s nearest plane algorithm to fifind the hidden lattice vector. The LLL reduction</p>
+<p>can be replaced with BKZ. We can also use CVP enumeration instead of nearest plane</p>
+<p>algorithm. Besides, another technique, known as Kannan’s embedding method [Kan87],</p>
+<p>transforms the CVP instance into a SVP instance by embedding the target vector into the</p>
+<p>original lattice, thus constructing a larger lattice:</p>
+<p><em>C</em> = <em>B</em></p>
+<p>0</p>
+<p><strong>v</strong></p>
+<p><em>q</em> <em>.</em></p>
+<p>Then, we can solve SVP by lattice reduction. In this paper, we mainly use Kannan’s</p>
+<p>embedding method to solve HNP.</p>
+<p>In practice, there are two subtle technical points that we should take care of:396 Guessing Bits: Improved Lattice Attacks on (EC)DSA with Nonce Leakage</p>
+<p><em>•</em></p>
+<p>We might fifind <em>q</em> <em>−</em> <em>α</em> instead of the secret key <em>α</em>, since <em>q</em> <em>−</em> <em>α</em> is also a good candidate</p>
+<p>(this can be easily checked). Therefore, we should check both. Note that the checking</p>
+<p>time is almost negligible compared with the time in lattice reduction, because the</p>
+<p>only operation is one scalar multiplication (for ECDSA) and checking consistency</p>
+<p>with public key.</p>
+<p><em>•</em></p>
+<p>Typically in practical attacks, the vector that we want is not the fifirst vector of the</p>
+<p>reduced basis, so we should check every row of the reduced basis. In other words,</p>
+<p>the attacks are considered successful if we fifind the vector in any row of the reduced</p>
+<p>basis (this is typical in the literature).</p>
+<p><strong>2.3 (EC)DSA Signature Scheme</strong></p>
+<p>Here we only discuss DSA and skip ECDSA, since for the construction of HNP instances,</p>
+<p>this makes no difffference. DSA is an El Gamal-like signature scheme, which is included in</p>
+<p>Digital Signature Standard (DSS) issued by NIST. DSA can be described as follows.</p>
+<p><strong>Parameters.</strong> <em>g</em> The parameters are <em>p</em>, <em>q</em>, <em>g</em>, where <em>p</em> and <em>q</em> are primes satisfying <em>q</em>*|*(<em>p</em> <em>−</em> 1),</p>
+<p><em>∈</em> Z <em>∗</em> <em>p</em> has order</p>
+<p><em>q</em>. Besides, we have a hash function</p>
+<p><em>h</em> that maps any arbitrary-length</p>
+<p>string into</p>
+<p>Z<em>q</em>. The signing key</p>
+<p><em>α</em> is a uniformly random number in</p>
+<p>Z <em>∗</em> <em>q</em> and the public key</p>
+<p>is <em>y</em> = <em>g</em> <em>α</em> mod <em>p</em>.</p>
+<p><strong>Signing Phase.</strong> To sign a message <em>m</em>, the nonce <em>k</em> is chosen uniformly at random from</p>
+<p>Z <em>∗</em> <em>q</em> , and we compute <em>r</em> = (<em>g</em> <em>k</em> mod <em>p</em>) mod <em>q</em>, and <em>s</em> = <em>k</em> <em>−</em>1 (<em>h</em>(<em>m</em>)+<em>αr</em>) mod <em>q</em>. The signature</p>
+<p>is the pair (<em>r, s</em>).</p>
+<p><strong>Verifification Phase.</strong> Given a signature pair (<em>r, s</em>) of the message <em>m</em>, if <em>r</em> = (<em>g</em> <em>h</em>(<em>m</em>)<em>s</em> <em>−</em>1 <em>y</em> <em>rs**−</em>1</p>
+<p>mod <em>p</em>) mod <em>q</em>, the signature is regarded as valid, otherwise invalid.</p>
+<p><strong>2.4 Lattice Attacks on (EC)DSA</strong></p>
+<p>From the signing phase of (EC)DSA, we already know that <em>s</em> <em>≡</em> <em>k</em> <em>−</em>1 (<em>h</em>(<em>m</em>) + <em>αr</em>) mod <em>q</em>, so</p>
+<p><em>αr</em> <em>≡</em> <em>sk</em> <em>−</em> <em>h</em>(<em>m</em>) (mod <em>q</em>)<em>.</em></p>
+<p>Now in our case, we have <em>l</em>-bit leakage, which means that we know <em>l</em> LSBs of <em>k</em>. In the</p>
+<p>case of timing attack, MSB is used, where the construction is very similar but slightly</p>
+<p>subtle. The difffference is that when <em>k</em> has some leading zeroes, *k &lt; q/*2 <em>l</em> might not be true</p>
+<p>depending on the order <em>q</em>. For more discussion, see Section 4.3 of [JSSS20]. Denote the</p>
+<p>value of <em>l</em> LSBs as <em>k</em>1, then we have <em>k</em> = 2<em>l**k</em>2 + <em>k</em>1 for some integer 0 <em>≤</em> <em>k</em>2 <em>≤</em> *q/*2 <em>l</em> , so:</p>
+<p><em>αr</em> <em>≡</em> <em>s</em>(2<em>l</em> <em>k</em>2 + <em>k</em>1) <em>−</em> <em>h</em>(<em>m</em>) (mod <em>q</em>)</p>
+<p><em>α</em>(<em>rs**−</em>1 <em>−</em> <em>k</em>1)2<em>−**l</em> <em>≡</em> <em>k</em>2 <em>−</em> 2 <em>−**l</em> <em>s</em> <em>−</em>1<em>h</em>(<em>m</em>) (mod <em>q</em>)<em>.</em></p>
+<p>For simplicity of formulas, we set <em>k</em>1 = 0 (without loss of generality, because we know the</p>
+<p>value of <em>k</em>1) and have:</p>
+<p><em>t</em> <em>≡</em> 2 <em>−**l</em> <em>s</em> <em>−</em>1 <em>r</em> (mod <em>q</em>)</p>
+<p><em>u</em> <em>≡ −</em>2 <em>−**l</em> <em>s</em> <em>−</em>1<em>h</em>(<em>m</em>) (mod <em>q</em>)</p>
+<p><em>k</em>2 <em>≡</em> <em>αt</em> <em>−</em> <em>u</em> (mod <em>q</em>)<em>.</em></p>
+<p>Note that both <em>t</em> and <em>u</em> can be computed from all the public available information. Since</p>
+<p>0 <em>≤</em> <em>k</em>2 *&lt; q/*2 <em>l</em> ,</p>
+<p>*|<em><em>αt</em> <em>−</em> <em>u</em></em>|*<em>q</em> *&lt; q/*2 <em>l</em> *.*Chao Sun, Thomas Espitau, Mehdi Tibouchi and Masayuki Abe 397</p>
+<p>In this way, we have constructed an HNP instance for (EC)DSA. Then we solve the HNP</p>
+<p>either by nearest plane algorithm or Kannan’s embedding method.</p>
+<p><strong>2.5 Recentering Technique</strong></p>
+<p>In order to further improve the lattice attack on (EC)DSA, there is a well-known technique</p>
+<p>in the community called recentering [NT12]. It works as follows: since</p>
+<p>*|<em><em>αt</em> <em>−</em> <em>u</em></em>|*<em>q</em> *&lt; q/*2 <em>l</em> <em>,</em></p>
+<p>there exists some integer <em>c</em> such that</p>
+<p>0 <em>≤</em> <em>αt</em> <em>−</em> <em>u</em> + *cq &lt; q/*2 <em>l</em> <em>,</em></p>
+<p>*−**q/*2 <em>l</em>+1 <em>≤</em> <em>αt</em> <em>−</em> <em>u</em> <em>−</em> *q/*2 <em>l</em>+1 + *cq &lt; q/*2 <em>l</em>+1 <em>.</em></p>
+<p>Therefore,</p>
+<p>*|*<em>αt</em> <em>−</em> <em>u</em> <em>−</em> *q/<em>2 <em>l</em>+1</em>|*<em>q</em> *&lt; q/*2 <em>l</em>+1 <em>.</em></p>
+<p>Now set</p>
+<p><em>v</em> = 2<em>l</em>+1<em>u</em> + <em>q.</em></p>
+<p>Then we have</p>
+<p>*|*<em>αt</em> <em>−</em> *v/<em>2 <em>l</em>+1</em>|*<em>q</em> *&lt; q/*2 <em>l</em>+1 <em>.</em></p>
+<p>Suppose that now we have <em>d</em> signatures (<em>r**i</em> <em>, s**i</em>) (<em>i</em> = 1*, . . . , d*) and compute the pairs (<em>t**i</em> <em>, u**i</em>)</p>
+<p>as previously defifined. Then construct a lattice <em>L</em> spanned by the following matrix <em>B</em>:</p>
+<p><em>B</em> =</p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p>2 <em>l</em>+1<em>q</em> 0 <em>· · ·</em> 0 0</p>
+<p>0 2</p>
+<p><em>l</em></p>
+<p>+1</p>
+<p><em>q</em></p>
+<p><em>· · ·</em></p>
+<p>0 0</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>0 0</p>
+<p><em>· · ·</em></p>
+<p>2</p>
+<p><em>l</em></p>
+<p>+1</p>
+<p><em>q</em></p>
+<p>0</p>
+<p>2 <em>l</em>+1</p>
+<p><em>t</em>1 2 <em>l</em></p>
+<p>+1</p>
+<p><em>t</em></p>
+<p>2</p>
+<p><em>· · ·</em> 2</p>
+<p><em>l</em></p>
+<p>+1</p>
+<p><em>t</em></p>
+<p><em>d</em></p>
+<p>1</p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p>and everything goes the same.</p>
+<p><strong>2.6 Projected Lattice</strong></p>
+<p>Typically, in standard lattice attacks, we almost always locate the secret key in the second</p>
+<p>row (which we hope to be the fifirst) of the reduced basis. In order to deal with this</p>
+<p>issue, [AH21] makes a modifification to the original lattice. Recall that the matrix that we</p>
+<p>construct is:</p>
+<p><em>B</em> =</p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p>2 <em>l</em>+1<em>q</em> 0 <em>· · ·</em> 0 0</p>
+<p>0 2</p>
+<p><em>l</em></p>
+<p>+1</p>
+<p><em>q</em></p>
+<p><em>· · ·</em></p>
+<p>0 0</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>0 0</p>
+<p><em>· · ·</em></p>
+<p>2</p>
+<p><em>l</em></p>
+<p>+1</p>
+<p><em>q</em></p>
+<p>0</p>
+<p>2 <em>l</em>+1</p>
+<p><em>t</em>1 2 <em>l</em></p>
+<p>+1</p>
+<p><em>t</em></p>
+<p>2</p>
+<p><em>· · ·</em> 2</p>
+<p><em>l</em></p>
+<p>+1</p>
+<p><em>t</em></p>
+<p><em>d</em></p>
+<p>1</p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p>With some simple linear combinations of the rows, we could know that (0*,* 0*, . . . ,* 0*, q*)</p>
+<p>belongs to this lattice. The expected Euclidean norm of the difffference vector <strong>e</strong> is roughly</p>
+<p>q <em>d</em>+1</p>
+<p>3 <em>q</em>. With typical parameters such as</p>
+<p><em>d</em> = 85*, l* = 2, <em>k</em> <strong>e</strong><em>k</em> is much larger than <em>q</em>. This</p>
+<p>means that the difffference vector</p>
+<p><strong>e</strong> will never be the shortest vector in practice. In fact, we</p>
+<p>can project this lattice orthogonal to (0*, . . . ,* 0*, q*) and construct a new lattice:</p>
+<p><em>B</em> =</p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p>2 <em>l</em>+1<em>q</em></p>
+<p>0</p>
+<p><em>· · ·</em></p>
+<p>0 0</p>
+<p>0 2</p>
+<p><em>l</em></p>
+<p>+1</p>
+<p><em>q</em></p>
+<p><em>· · ·</em></p>
+<p>0 0</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>0 0</p>
+<p><em>· · ·</em></p>
+<p>2</p>
+<p><em>l</em></p>
+<p>+1</p>
+<p><em>q</em></p>
+<p>0</p>
+<p>2 <em>l</em>+1<em>t</em>1</p>
+<p>(<em>t**d</em>) <em>−</em>1 2 <em>l</em>+1<em>t</em></p>
+<p>2</p>
+<p>(<em>t</em></p>
+<p><em>d</em>) <em>−</em>1</p>
+<p><em>· · ·</em> 2 <em>l</em>+1<em>t</em></p>
+<p><em>d</em></p>
+<p><em>−</em></p>
+<p>1(</p>
+<p><em>t**d</em>) <em>−</em>1 2 <em>l</em></p>
+<p>+1</p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p>*.*398 Guessing Bits: Improved Lattice Attacks on (EC)DSA with Nonce Leakage</p>
+<p><strong>Table 2:</strong> Typical number of signatures for 160-bit modulus.</p>
+<p>Nonce leakage <em>l</em></p>
+<p>4-bit 3-bit 2-bit 1-bit</p>
+<p>Number of signatures <em>d</em></p>
+<p>50 80 100 200</p>
+<p>2 In this new lattice, the hidden vector will be (<em>|<strong>αt</strong>d**|*<em>q</em> <em>·</em> 2 <em>l</em>+1</em>t<em>1(<em>t**d</em>) <em>−</em>1 + <em>c</em>12 <em>l</em>+1</em>q, . . . ,* <em>|<strong>αt</strong>d</em>*|*<em>q</em> <em>·</em></p>
+<p><em>l</em>+1<em>t<strong>d</strong>−</em>1(<em>t**d</em>) <em>−</em>1 + <em>c**d</em>2 <em>l</em>+1<em>q,</em> 2 <em>l</em>+1*|<strong>αt</strong>d**|<em><em>q</em>). The important thing is that the vector (0</em>,* 0*, . . . ,* 0*, q*)</p>
+<p>does not belong to the new lattice, so we are able to locate the private key in the fifirst row</p>
+<p>of the reduced basis.</p>
+<p><strong>3 Analysis: Modeling Lattice Attacks on (EC)DSA</strong></p>
+<p>As previously mentioned, there are “borderline” cases that were considered diffiffifficult for</p>
+<p>standard lattice attacks on (EC)DSA, e.g., 160-bit modulus with 2-bit nonce leakage,</p>
+<p>256-bit modulus with 3-bit nonce leakage, 384-bit modulus with 4-bit nonce leakage. One</p>
+<p>important question about this is: <em>How diffiffifficult are those “borderline” cases?</em> In this section,</p>
+<p>we explain this question, quantify the diffiffifficulty and give intuitive ideas for our attacks in</p>
+<p>later sections.</p>
+<p><strong>3.1 Diffiffifficulty When Nonce Leakage is Small</strong></p>
+<p>For each HNP inequality, there exists some integer <em>c**i</em> such that</p>
+<p><em>|**α</em>2 <em>l</em>+1<em>t**i</em> <em>−</em> <em>v**i</em> + <em>c**i</em>2 <em>l</em>+1<em>q**|</em> <em>&lt; q.</em></p>
+<p>Let the target vector <strong>v</strong> = (<em>v</em>1*, . . . , v<strong>d</strong>,* 0) and the hidden lattice vector <strong>h</strong> = (<em>α</em>2 <em>l</em>+1<em>t</em>1 +</p>
+<p><em>c</em>12 <em>l</em>+1<em>q, . . . , α</em>2 <em>l</em>+1<em>t**d</em> +</p>
+<p><em>c**d</em></p>
+<p>2 <em>l</em>+1</p>
+<p><em>q, α</em>), thus the Euclidean norm of the difffference vector</p>
+<p><strong>e</strong> is</p>
+<p>upper bounded by <em>q</em> <em>√</em> <em>d</em></p>
+<p>+ 1</p>
+<p>. The volume of this lattice</p>
+<p><em>L</em> is <em>q</em> <em>d</em>2 (<em>l</em>+1)<em>d</em> , and according to</p>
+<p>Gaussian Heuristic, the Euclidean norm of the shortest vector is roughly</p>
+<p><em>λ</em>1(<em>L</em>) <em>≈</em> r <em>d</em> 2 + 1</p>
+<p><em>πe</em></p>
+<p>(vol)</p>
+<p>1</p>
+<p><em>d</em>+1</p>
+<p><em>≈</em> r <em>d</em> 2 + 1</p>
+<p><em>πe</em></p>
+<p>2</p>
+<p>(<em>l</em></p>
+<p>+1)</p>
+<p><em>d</em></p>
+<p><em>d</em></p>
+<p>+1</p>
+<p><em>q</em></p>
+<p><em>d</em></p>
+<p><em>d</em>+1</p>
+<p><em>.</em></p>
+<p>Therefore, the requirement is that the distance is much smaller than <em>λ</em>1(<em>L</em>):</p>
+<p><em>q</em> <em>√</em> <em>d</em> + 1 <em>&lt;</em> r <em>d</em> 2 + 1</p>
+<p><em>πe</em></p>
+<p>2</p>
+<p>(<em>l</em></p>
+<p>+1)</p>
+<p><em>d</em></p>
+<p><em>d</em></p>
+<p>+1</p>
+<p><em>q</em></p>
+<p><em>d</em></p>
+<p><em>d</em>+1</p>
+<p><em>.</em></p>
+<p>After solving this inequality, we get</p>
+<p><em>d</em> <em>≥</em></p>
+<p>log</p>
+<p>2 (<em>q</em>)</p>
+<p><em>l</em> <em>−</em> log2 (</p>
+<p>p *πe/*2)</p>
+<p><em>.</em></p>
+<p>This can be used to estimate the number of signatures needed for the attack to succeed.</p>
+<p>Table 2 is the typical number of signatures needed (just information-theoretically, the</p>
+<p>attack might not be successful at all) to perform the lattice attack on 160-bit (EC)DSA.</p>
+<p>Now, we give an intuitive explanation of why lattice attacks against (EC)DSA with small</p>
+<p>nonce leakage are diffiffifficult.</p>
+<p>When <em>l</em> = 3 and <em>d</em> = 80 (this case is regarded as “easy” for lattice attacks), the lattice</p>
+<p>basis matrix <em>B</em> is:</p>
+<p><em>B</em> =</p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p>16<em>q</em> 0 <em>· · ·</em> 0 0</p>
+<p>0 16</p>
+<p><em>q</em></p>
+<p><em>· · ·</em></p>
+<p>0 0</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>0 0</p>
+<p><em>· · ·</em></p>
+<p>16</p>
+<p><em>q</em></p>
+<p>0</p>
+<p>16</p>
+<p><em>t</em>1 16</p>
+<p><em>t</em></p>
+<p>2</p>
+<p><em>· · ·</em> 16</p>
+<p><em>t</em></p>
+<p><em>d</em></p>
+<p>1</p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p>*.*Chao Sun, Thomas Espitau, Mehdi Tibouchi and Masayuki Abe 399</p>
+<p>The Euclidean norm of the fifirst vector is 16<em>q</em>, and <em>k</em> <strong>e</strong><em>k</em> is upper bounded by <em>q</em> <em>√</em> <em>d</em> + 1 = 9<em>q</em>.</p>
+<p>Therefore, any linear combination of the fifirst <em>d</em> rows will have signifificantly larger Euclidean</p>
+<p>norm than <em>k</em></p>
+<p><strong>e</strong><em>k</em> .</p>
+<p>When <em>l</em></p>
+<p>= 2 and</p>
+<p><em>d</em> = 100 (this case is regarded as “hard” for standard lattice attacks,</p>
+<p>but have been solved in specifific papers), the Euclidean norm of the fifirst vector is</p>
+<p>8<em>q</em>, and</p>
+<p><em>k</em> <strong>e</strong><em>k</em> is upper bounded by <em>q</em></p>
+<p><em>√</em> <em>d</em> + 1 <em>≈</em></p>
+<p>10</p>
+<p><em>q</em></p>
+<p>. To be a bit more precise, we can compute the</p>
+<p>expected norm, which is roughly q</p>
+<p>100</p>
+<p>3</p>
+<p><em>q</em></p>
+<p>2</p>
+<p><em>≈</em> 6<em>q</em>.</p>
+<p>When <em>l</em> = 1 and <em>d</em> = 200 (this case remains “hard” so far), similarly, the Euclidean</p>
+<p>norm of the fifirst vector is 4<em>q</em>, and <em>k</em> <strong>e</strong><em>k</em> is upper-bounded by <em>q</em> <em>√</em> <em>d</em></p>
+<p>computation, we can know that the expected norm is around + 1 <em>≈</em> 14<em>q</em>. With similar</p>
+<p>8<em>q</em>. This means that many</p>
+<p>linear combinations of the fifirst <em>d</em> rows will have smaller Euclidean norm than the difffference</p>
+<p>vector <strong>e</strong>. In other words, there are exponentially many lattice vectors that are closer to</p>
+<p>the target vector than the hidden vector, thus making decoding extremely diffiffifficult.</p>
+<p><strong>3.2 Modeling Lattice Attacks</strong></p>
+<p>Following the idea of [AFG14a], we consider lattice attacks on (EC)DSA as Unique-SVP</p>
+<p>instances. In [GN08], it is concluded that given a lattice reduction algorithm which we</p>
+<p>assume to be characterised by a root Hermite factor <em>δ</em>0 and a n-dimensional lattice</p>
+<p><em>L</em>, the</p>
+<p>algorithm will be successful in disclosing a shortest non-zero vector with “high probability”</p>
+<p>when <em>λ</em></p>
+<p>2</p>
+<p><em>λ</em></p>
+<p>1 <em>≥</em> <em>τ</em> <em>·</em> <em>δ</em>0 <em>n</em> (we call <em>λ</em></p>
+<p>2</p>
+<p><em>λ</em></p>
+<p>1</p>
+<p>the gap), where <em>τ</em> is a constant depending both on the nature</p>
+<p>of the lattices involved and lattice reduction algorithm being used. However, in [GN08],</p>
+<p>they do not explain what “high probability” means. Therefore, in some subsequent work</p>
+<p>[AFG14a], the success rate is fifixed to some number (10 percent, for example) and the</p>
+<p>dimension <em>n</em> is taken as the smallest possible in practice in order to achieve the same</p>
+<p>success rate.</p>
+<p>Here we slightly change the model such that <em>τ</em> is not a constant, but a function</p>
+<p><em>τ**n</em> =</p>
+<p><em>k</em></p>
+<p>log(</p>
+<p><em>n</em>) (<em>k</em> is some constant) on the dimension <em>n</em>. Besides, we choose BKZ–30 as the</p>
+<p>lattice reduction algorithm and fifix the success rate to be 20%. In the context of this</p>
+<p>section, the modulus <em>q</em> is 160-bit.</p>
+<p>Recall that the lattice we construct is:</p>
+<p><em>B</em> =</p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p>2 <em>l</em>+1<em>q</em> 0 <em>· · ·</em> 0 0</p>
+<p>0 2</p>
+<p><em>l</em></p>
+<p>+1</p>
+<p><em>q</em></p>
+<p><em>· · ·</em></p>
+<p>0 0</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>0 0</p>
+<p><em>· · ·</em></p>
+<p>2</p>
+<p><em>l</em></p>
+<p>+1</p>
+<p><em>q</em></p>
+<p>0</p>
+<p>2 <em>l</em>+1</p>
+<p><em>t</em>1 2 <em>l</em></p>
+<p>+1</p>
+<p><em>t</em></p>
+<p>2</p>
+<p><em>· · ·</em> 2</p>
+<p><em>l</em></p>
+<p>+1</p>
+<p><em>t</em></p>
+<p><em>d</em></p>
+<p>2 <em>l</em></p>
+<p>+1</p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p>so the lattice dimension <em>n</em> = <em>d</em> + 1, where <em>d</em> is the number of signatures being used. As</p>
+<p>before, we denote the difffference vector between the target vector and the hidden lattice</p>
+<p>vector as <strong>e</strong>. Besides, we are using Kannan’s embedding method to perform lattice attacks</p>
+<p>on a larger lattice:</p>
+<p><em>C</em> = <em>B</em></p>
+<p>0</p>
+<p><strong>v</strong></p>
+<p><em>q</em> <em>.</em></p>
+<p>Regarded as a Unique-SVP instance, the success rate of the attack crucially depends on</p>
+<p>the ratio <em>λ</em></p>
+<p><em>0</em></p>
+<p>2</p>
+<p><em>λ</em></p>
+<p><em>0</em></p>
+<p>1</p>
+<p>, where <em>λ</em> <em>0</em>1 <em>, λ**0</em>2 are the fifirst and second minimum of the embedded lattice <em>L</em>(<em>C</em>).</p>
+<p>According to the relation between</p>
+<p><em>L</em></p>
+<p>(</p>
+<p><em>B</em>)</p>
+<p>(lattice spanned by the matrix</p>
+<p><em>B</em>) and <em>L</em>(<em>C</em>)</p>
+<p>(lattice spanned by the matrix <em>C</em>), <em>λ</em></p>
+<p><em>0</em></p>
+<p>1</p>
+<p><em>≈ k</em></p>
+<p><strong>e</strong></p>
+<p><em>k</em> and <em>λ</em> <em>0</em>2 <em>≈</em> <em>λ</em>1, where <em>λ</em>1 is the fifirst minimum</p>
+<p>of the original lattice <em>L</em>(<em>B</em>). Therefore, the success rate of lattice attacks increases as the</p>
+<p>ratio <em>λ</em></p>
+<p>1</p>
+<p><em>k</em> <strong>e</strong></p>
+<p><em>k</em> increases.400 Guessing Bits: Improved Lattice Attacks on (EC)DSA with Nonce Leakage</p>
+<p><strong>Table 3:</strong> Experimental result: gap needed to achieve <em>≥</em> 20% success rate.</p>
+<p>Leakage <em>l</em></p>
+<p>Signatures <em>d</em></p>
+<p>Gap <em>λ</em>1*/<em><em>k</em> <strong>e</strong></em>k* Success rate</p>
+<p>3 54 0.93 20/100</p>
+<p>4 40 0.91 25/100</p>
+<p>5 32 0.88 20/100</p>
+<p>6 27 0.87 21/100</p>
+<p>7 23 0.86 25/100</p>
+<p>8 20 0.85 23/100</p>
+<p>As previously mentioned, we assume that in order to achieve 20% success rate, the</p>
+<p>requirement is</p>
+<p>gap =</p>
+<p><em>λ</em>1</p>
+<p><em>k</em> <strong>e</strong><em>k ≥</em></p>
+<p><em>k</em></p>
+<p>log(<em>d</em> + 1) <em>·</em> <em>δ</em>0 <em>d</em>+1 <em>,</em></p>
+<p>where <em>δ</em>0 is the root Hermite factor and <em>k</em> is some constant. Before proceeding, we have to</p>
+<p>determine the root Hermite factor as well as the number of signatures <em>d</em>. First we do some</p>
+<p>experiments to determine the root hermite factor <em>δ</em>0 for BKZ–30 on this type of lattice</p>
+<p>(for HNP attack). After doing numerous experiments, we determine that <em>δ</em>0 <em>≈</em> 1*.*01 for</p>
+<p>BKZ–30. In addition, we take <em>d</em> as the binary length of the modulus <em>qlen</em> divided by the</p>
+<p>leakage <em>l</em>. Intuitively and information theoretically, one HNP inequality with <em>l</em>-bit leakage</p>
+<p>contains <em>l</em> bits of information, so in order to recover the secret key <em>α</em> that has <em>qlen</em> bits, at</p>
+<p>least <em>qlen</em></p>
+<p><em>l</em></p>
+<p>inequalities are necessary.</p>
+<p>Table 3 shows the experimental results of the gap ( <em>λ</em></p>
+<p>1</p>
+<p><em>k</em> <strong>e</strong></p>
+<p><em>k</em> ) that is necessary to achieve</p>
+<p>20% success rate for 160-bit (EC)DSA. Now we do a linear regression to determine the</p>
+<p>constant <em>k</em>. After carrying out the regression depicted in Figure 1, we fifind that <em>k</em> <em>≈</em> 3*.*11.</p>
+<p>Now we estimate the computation cost for the “borderline” case 160-bit (EC)DSA with</p>
+<p>2-bit nonce leakage. The dimension <em>d</em> = 160</p>
+<p>2 = 80, and the requirement is</p>
+<p>gap =</p>
+<p><em>λ</em>1</p>
+<p><em>k</em> <strong>e</strong><em>k ≥</em></p>
+<p><em>k</em></p>
+<p>log(<em>d</em> + 1) <em>·</em> <em>δ</em>0 <em>d</em>+1 =</p>
+<p>3*.*11</p>
+<p>log(81)</p>
+<p><em>·</em> 1*.<em>0181 <em>≈</em> 1</em>.<em>098</em>.*</p>
+<p>According to Gaussian Heuristic, we have</p>
+<p><em>λ</em>1(<em>L</em>) <em>≈</em> r <em>d</em> 2 + 1</p>
+<p><em>πe</em></p>
+<p>vol(<em>L</em>) 1*/<em>(<em>d</em>+1) = r 2 81 <em>πe</em> vol(<em>L</em>) 1</em>/*81 <em>.</em></p>
+<p>0*.*16</p>
+<p>0*.*18</p>
+<p>0*.*2</p>
+<p>0*.*22</p>
+<p>0*.*24</p>
+<p>0*.*5</p>
+<p>0*.*55</p>
+<p>0*.*6</p>
+<p>0*.*65</p>
+<p>0*.*7</p>
+<p>1</p>
+<p>log(<em>d</em>+1)</p>
+<p><strong>Figure 1:</strong> Linear regression to estimate the constant <em>k</em>.</p>
+<p><em>τ**d</em>Chao Sun, Thomas Espitau, Mehdi Tibouchi and Masayuki Abe 401</p>
+<p>The expected length of <strong>e</strong> is roughly q 81</p>
+<p>3 <em>q</em>, so we have</p>
+<p>q 2 81 <em>πe</em> vol(<em>L</em>) 1*/*81</p>
+<p>q 81</p>
+<p>3 <em>q</em></p>
+<p><em>≥</em> 1*.<em>098</em>,*</p>
+<p>which is equivalent to</p>
+<p>vol(<em>L</em>) <em>≥</em> 2*.*6181 <em>·</em> <em>q</em> 81 <em>,</em></p>
+<p>but the real volume of the lattice is 8 81 <em>·</em> <em>q</em> 80, so the ratio between them is</p>
+<p>2*.*6181 <em>·</em></p>
+<p><em>q</em> 81</p>
+<p>8 81 <em>·</em> <em>q</em></p>
+<p>80</p>
+<p><em>≈</em></p>
+<p><em>q</em></p>
+<p>2 130</p>
+<p><em>≈</em> 2 30 <em>.</em></p>
+<p>This means that if we could increase the volume of the lattice by 2 30 times and keep <em>k</em> <strong>e</strong><em>k</em></p>
+<p>unchanged, then we have 20% success rate for 160-bit modulus with 2-bit nonce leakage.</p>
+<p>The number 2 30 somewhat shows the magnitude of computation cost for 2-bit nonce</p>
+<p>leakage case.</p>
+<p><strong>3.3 One Intuitive Idea to Improve the Attacks</strong></p>
+<p>The direct idea is to increase the gap <em>λ</em></p>
+<p>1</p>
+<p>(<em>L</em></p>
+<p>)</p>
+<p><em>k</em></p>
+<p><strong>e</strong></p>
+<p><em>k</em></p>
+<p><em>.</em> Since <em>λ</em>1(<em>L</em>) <em>≈</em> q <em>d</em> 2 +1</p>
+<p><em>πe</em> vol(<em>L</em>) 1*/*(<em>d</em>+1) <em>,</em> we could</p>
+<p>increase the volume of the lattice while keeping <em>k</em> <strong>e</strong><em>k</em> almost unchanged. Our attack is</p>
+<p>directly based on this idea. In later sections, we will show that by brute-forcing some bits</p>
+<p>of the secret key (or the nonces), we could modify the original lattice and increase the</p>
+<p>volume of the lattice, while <em>k</em> <strong>e</strong><em>k</em> is almost unchanged. Thus, according to the property of</p>
+<p>Unique-SVP, we will have signifificantly better success rate.</p>
+<p><strong>4 Guessing Bits of Secret Key</strong></p>
+<p>In our context, we are considering those “borderline” cases, so in this section, the modulus</p>
+<p><em>q</em> has 160 bits and the nonce leakage <em>l</em> = 2 (for other moduli, it is similar). In standard</p>
+<p>lattice attacks, either we fifind the secret key or get nothing. Even if we set the secret key</p>
+<p>having only 10 bits, it still does not make lattice attacks any easier (of course, if it has only</p>
+<p>10 bits, then we could brute-force the secret key, but it is irrelevant here, since we only</p>
+<p>care about lattice attacks). Therefore, it is somewhat believed that partial information of</p>
+<p>the secret key do not help the attack. Perhaps surprisingly, we fifind that the length of the</p>
+<p>secret key is closely related to the diffiffifficulty of the attack. Take 160-bit (EC)DSA with</p>
+<p>2-bit leakage for instance, if we assume that the secret key has less than 60 bits, we can</p>
+<p>modify the original lattice and make the attack very easy.</p>
+<p>Recall that the HNP inequality is <em>|<strong>αt</strong>i</em> <em>−</em> <em>u**i</em> *|*<em>q</em> <em>&lt; q/<em>2 <em>l</em> (<em>i</em> = 1</em>, . . . , d</em>) and the lattice we</p>
+<p>construct is:</p>
+<p><em>B</em> =</p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p>2 <em>l</em>+1<em>q</em> 0 <em>· · ·</em> 0 0</p>
+<p>0 2</p>
+<p><em>l</em></p>
+<p>+1</p>
+<p><em>q</em></p>
+<p><em>· · ·</em></p>
+<p>0 0</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>0 0</p>
+<p><em>· · ·</em></p>
+<p>2</p>
+<p><em>l</em></p>
+<p>+1</p>
+<p><em>q</em></p>
+<p>0</p>
+<p>2 <em>l</em>+1</p>
+<p><em>t</em>1 2 <em>l</em></p>
+<p>+1</p>
+<p><em>t</em></p>
+<p>2</p>
+<p><em>· · ·</em> 2</p>
+<p><em>l</em></p>
+<p>+1</p>
+<p><em>t</em></p>
+<p><em>d</em></p>
+<p>1</p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p><em>.</em></p>
+<p>The target vector is (2<em>l</em>+1<em>u</em>1 +<em>q,</em> 2 <em>l</em>+1<em>u</em>2 +<em>q, . . . ,</em> 2 <em>l</em>+1<em>u**d</em> +<em>q,</em> 0), and the hidden lattice vector</p>
+<p>is (<em>α</em>2 <em>l</em>+1<em>t</em>1 + <em>c</em>12 <em>l</em>+1<em>q, α</em>2 <em>l</em>+1<em>t</em>2 + <em>c</em>22 <em>l</em>+1<em>q, . . . , α</em>2 <em>l</em>+1<em>t**d</em> + <em>c**d</em>2 <em>l</em>+1<em>q, α</em>). Again we denote the</p>
+<p>difffference vector between them as <strong>e</strong> and we already know that each coeffiffifficient of <strong>e</strong> is402 Guessing Bits: Improved Lattice Attacks on (EC)DSA with Nonce Leakage</p>
+<p>less than <em>q</em>, so</p>
+<p><em>k</em> <strong>e</strong><em>k</em> <em>&lt; q**√</em> <em>d</em> + 1. As we have discussed in the previous section, in order to</p>
+<p>improve the success rate of lattice attacks, one direct idea is to increase the volume of the</p>
+<p>lattice while keeping <em>k</em> <strong>e</strong><em>k</em> almost unchanged. For instance, we could modify the lattice as</p>
+<p><em>B</em> =</p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p>2 <em>l</em>+1<em>q</em> 0 <em>· · ·</em> 0 0</p>
+<p>0 2</p>
+<p><em>l</em></p>
+<p>+1</p>
+<p><em>q</em></p>
+<p><em>· · ·</em></p>
+<p>0 0</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>0 0</p>
+<p><em>· · ·</em></p>
+<p>2</p>
+<p><em>l</em></p>
+<p>+1</p>
+<p><em>q</em></p>
+<p>0</p>
+<p>2 <em>l</em>+1</p>
+<p><em>t</em>1 2 <em>l</em></p>
+<p>+1</p>
+<p><em>t</em></p>
+<p>2</p>
+<p><em>· · ·</em> 2</p>
+<p><em>l</em></p>
+<p>+1</p>
+<p><em>t</em></p>
+<p><em>d</em></p>
+<p>2 100</p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p><em>.</em></p>
+<p>In this way, we increase the volume of the lattice by 2 100 times, but the problem is that</p>
+<p>the hidden lattice vector will not be close to the target vector anymore, because the hidden</p>
+<p>lattice vector is (<em>α</em>2 <em>l</em>+1<em>t</em>1 + <em>c</em>12 <em>l</em>+1<em>q, α</em>2 <em>l</em>+1<em>t</em>2 + <em>c</em>22 <em>l</em>+1<em>q, . . . , α</em>2 <em>l</em>+1<em>t**d</em> + <em>c**d</em>2 <em>l</em>+1<em>q,</em> 2 100<em>α</em>), and</p>
+<p>the last coeffiffifficient of <strong>e</strong> is very large (2 100<em>α</em>), thus making the modifification meaningless.</p>
+<p>However, if we assume that the secret key has less than 60 bits, then 2 100<em>α</em> is still</p>
+<p>upper-bounded by 2 160 <em>≈</em> <em>q</em>, so this means</p>
+<p><em>k</em> <strong>e</strong><em>k</em> keeps almost unchanged, and we have</p>
+<p>increased the volume of the lattice by</p>
+<p>2 100 times, thus making the success probability</p>
+<p>signifificantly better. We carry out some simulation experiments and fifind that if the secret</p>
+<p>key only has 60 bits for 160-bit (EC)DSA with 2-bit nonce leakage, after modifying the</p>
+<p>lattice as the above matrix B, we can recover the secret key in just one BKZ–20 operation</p>
+<p>with 100% success rate, so this becomes almost trivial.</p>
+<p>This observation leads to the following attack. First write the secret key in the following</p>
+<p>format</p>
+<p><em>α</em> = <em>α</em>1 <em>·</em> 2 <em>c</em> + <em>α</em>2 (0 <em>≤</em> <em>α</em>2 <em>&lt;</em> 2 <em>c</em> )<em>,</em></p>
+<p>where <em>c</em> is any arbitrary predetermined integer between 1 and 160. Then <em>α</em>1 is the (160<em>−**c</em>)</p>
+<p>most signifificant bits of <em>α</em> and <em>α</em>2 is the remaining <em>c</em> bits of <em>α</em>. Suppose that we have</p>
+<p>constructed <em>d</em> HNP inequalities with leakage <em>l</em></p>
+<p><em>|<em><em>α</em> <em>·</em> *t</em>*i</em> <em>−</em> <em>u**i</em> <em>|<em><em>q</em> <em>&lt; q/<em>2 <em>l</em> (<em>i</em> = 1</em>,</em> 2</em>, . . . , d</em>).</p>
+<p>Then substitute <em>α</em> with <em>α</em>1 <em>·</em> 2 <em>c</em> + <em>α</em>2 and we have</p>
+<p><em>|**α</em>1 <em>·</em> 2 <em>c</em> <em>·</em> <em>t**i</em> + <em>α</em>2 <em>·</em> <em>t**i</em> <em>−</em> <em>u**i</em> <em>|<em><em>q</em> <em>&lt; q/<em>2 <em>l</em> (<em>i</em> = 1</em>,</em> 2</em>, . . . , d</em>).</p>
+<p>Then set</p>
+<p><em>t</em></p>
+<p><em>0</em></p>
+<p><em>i</em></p>
+<p>= 2<em>c</em> <em>·</em> <em>t**i</em> <em>,</em></p>
+<p><em>u</em></p>
+<p><em>0</em></p>
+<p><em>i</em></p>
+<p>= <em>−**α</em>2 <em>·</em> <em>t**i</em> + <em>u**i</em> <em>,</em></p>
+<p>so we have new HNP inequalities for <em>t</em></p>
+<p><em>0</em></p>
+<p><em>i</em></p>
+<p>and <em>u</em></p>
+<p><em>0</em></p>
+<p><em>i</em></p>
+<p>:</p>
+<p><em>|**α</em>1 <em>·</em> <em>t</em></p>
+<p><em>0</em></p>
+<p><em>i</em></p>
+<p><em>−</em> <em>u</em></p>
+<p><em>0</em></p>
+<p><em>i</em></p>
+<p><em>|<em><em>q</em> <em>&lt; q/<em>2 <em>l</em> (<em>i</em> = 1</em>,</em> 2</em>, . . . , d</em>).</p>
+<p>Then construct the lattice as</p>
+<p><em>B</em> =</p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p>2 <em>l</em>+1<em>q</em> 0 <em>· · ·</em> 0 0</p>
+<p>0 2</p>
+<p><em>l</em></p>
+<p>+1</p>
+<p><em>q</em></p>
+<p><em>· · ·</em></p>
+<p>0 0</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>0 0</p>
+<p><em>· · ·</em></p>
+<p>2</p>
+<p><em>l</em></p>
+<p>+1</p>
+<p><em>q</em></p>
+<p>0</p>
+<p>2 <em>l</em>+1</p>
+<p><em>t</em> <em>0</em>1 2 <em>l</em></p>
+<p>+1</p>
+<p><em>t</em></p>
+<p><em>0</em></p>
+<p>2</p>
+<p><em>· · ·</em> 2</p>
+<p><em>l</em></p>
+<p>+1</p>
+<p><em>t</em></p>
+<p><em>0</em></p>
+<p><em>d</em></p>
+<p>2</p>
+<p><em>c</em></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p>The hidden vector is (<em>α</em>12 <em>l</em>+1<em>t</em> <em>0</em>1 + <em>c</em>12 <em>l</em>+1<em>q, α</em>12 <em>l</em>+1<em>t</em> <em>0</em>2 + <em>c</em>22 <em>l</em>+1<em>q, . . . , α</em>12 <em>l</em>+1<em>t</em> <em>0**d</em> + <em>c**d</em>2 <em>l</em>+1<em>q, α</em>12 <em>c</em> )</p>
+<p>and the target vector is (2<em>l</em>+1<em>u</em> <em>0</em>1 + <em>q,</em> 2 <em>l</em>+1<em>u</em> <em>0</em>2 + <em>q, . . . ,</em> 2 <em>l</em>+1<em>u</em> <em>0**d</em> + <em>q,</em> 0). Now we have increasedChao Sun, Thomas Espitau, Mehdi Tibouchi and Masayuki Abe 403</p>
+<p>the volume of the lattice by 2 <em>c</em> times while keeping <em>k</em> <strong>e</strong><em>k</em> almost unchanged, since <em>α</em>12 <em>c</em> is</p>
+<p>upper bounded by <em>q</em>. Of course we do not know the value of <em>α</em>2, but we can enumerate <em>α</em>2</p>
+<p>from 0 to 2 <em>c</em> , so this is a trade-offff: we increase the volume of the lattice by 2 <em>c</em> times (thus</p>
+<p>making the attack easier) at the cost of 2 <em>c</em> enumerations. We formalize the attack as the</p>
+<p>following steps:</p>
+<p><em>•</em> Step 1: Determine the integer constant <em>c</em> (it depends on how much computation cost</p>
+<p>we want to pay).</p>
+<p><em>•</em> Step 2: Collect d signatures and construct <em>t**i</em> <em>, u**i</em> as previously defifined (<em>i</em> = 1*,* 2*, . . . , d*).</p>
+<p><em>•</em> Step 3: Enumerate <em>α</em>2 from 0 to 2 <em>c</em> :</p>
+<p><strong>–</strong> Construct the corresponding HNP instance for <em>α</em>1.</p>
+<p><strong>–</strong> Solve the new HNP instance by Kannan’s embedding method.</p>
+<p>With this method, we are able to attack those “borderline” cases: 160-bit (EC)DSA with</p>
+<p>2-bit nonce leakage, 256-bit (EC)DSA with 3-bit nonce leakage, 384-bit (EC)DSA with</p>
+<p>4-bit nonce leakage. For more detail, see the section of experimental results.</p>
+<p>One typical question for this attack would be: <em>What is the difffference between our</em></p>
+<p><em>approach and directly applying BKZ with larger block size?</em> We make a comparison:</p>
+<p><em>•</em> In some sense, our approach has similar effffect as directly applying BKZ with larger</p>
+<p>block size. While BKZ with larger block size outputs lattice basis with smaller root</p>
+<p>Hermite factor (thus better chance of fifinding the vector <strong>e</strong>), our approach aims to</p>
+<p>increase the gap for Unique-SVP and have better success rate due to the property of</p>
+<p>Unique-SVP.</p>
+<p><em>•</em> Our approach is easy to simulate and control. In simulation experiments, we could</p>
+<p>assume that we have guessed the correct bits, thus avoding the enumeration, which</p>
+<p>is diffiffifficult to carry out in a short time.</p>
+<p><em>•</em> Our approach can be easily parallelized, because each enumeration of bits is inde</p>
+<p>pendent. While we do not deny the fact that BKZ with larger block size could also</p>
+<p>be parallelized, it requires another implementation of the SVP oracle (changing the</p>
+<p>internal code of fplll library [dt20]), which needs a lot of work.</p>
+<p><strong>5 Guessing Bits of Nonces</strong></p>
+<p>Another similar approach could be made to increase the volume of the lattice. Again in our</p>
+<p>context, the modulus <em>q</em> has 160 bits, the leakage <em>l</em> = 2. For other moduli, it is essentially</p>
+<p>the same, so we will not discuss it again.</p>
+<p>Suppose that now we have <em>d</em> 160-bit (EC)DSA signatures (<em>r**i</em> <em>, s**i</em>) (<em>i</em> = 1*, . . . , d*) with</p>
+<p>2-bit nonce leakage and computed <em>t**i</em> = <em>|<em><em>r</em> <em>·</em> 2 <em>−</em>2 <em>s</em> <em>−</em>1 *|<em><em>q</em> and *u</em></em>i</em> = <em>| −</em> <em>h</em>(<em>m</em>) <em>·</em> 2 <em>−</em>2 <em>s</em> <em>−</em>1 *|*<em>q</em> as in</p>
+<p>previous sections, so the nonce <em>k**i</em> = 22 <em>b**i</em> where <em>b**i</em> is some integer. We can guess the third</p>
+<p>least signifificant bit of the nonce, thus constructing a HNP inequality with 3-bit leakage</p>
+<p>with probability</p>
+<p>1</p>
+<p>2</p>
+<p>. If the third bit is zero, then</p>
+<p><em>k**i</em> = 23 <em>b</em></p>
+<p><em>0</em></p>
+<p><em>i</em></p>
+<p><em>,</em></p>
+<p>and we set:</p>
+<p><em>t</em></p>
+<p><em>0</em></p>
+<p><em>i</em></p>
+<p>= *|*<em>r</em> <em>·</em> 2 <em>−</em>3 <em>s</em> <em>−</em>1 *|*<em>q</em> and <em>u</em></p>
+<p><em>0</em></p>
+<p><em>i</em></p>
+<p>= <em>| −</em> <em>h</em>(<em>m</em>) <em>·</em> 2 <em>−</em>3 <em>s</em> <em>−</em>1 *|<strong>q</strong>.*404 Guessing Bits: Improved Lattice Attacks on (EC)DSA with Nonce Leakage</p>
+<p>If the third bit is 1, we have:</p>
+<p><em>k**i</em> = 23 <em>b</em></p>
+<p><em>0</em></p>
+<p><em>i</em></p>
+<p>+ 22</p>
+<p><em>αrs**−</em>1 <em>≡</em> 2 3 <em>b</em></p>
+<p><em>0</em></p>
+<p><em>i</em></p>
+<p>+ 22 <em>−</em> <em>h</em>(<em>m</em>)<em>s</em> <em>−</em>1 (mod <em>q</em>)</p>
+<p><em>αrs**−</em>1 2 <em>−</em>3 <em>≡</em> <em>b</em></p>
+<p><em>0</em></p>
+<p><em>i</em></p>
+<p>+ 2<em>−</em>1 <em>−</em> <em>h</em>(<em>m</em>)<em>s</em> <em>−</em>1 2 <em>−</em>3 (mod <em>q</em>)<em>,</em></p>
+<p>and we then set:</p>
+<p><em>t</em></p>
+<p><em>0</em></p>
+<p><em>i</em></p>
+<p>= *|*<em>r</em> <em>·</em> 2 <em>−</em>3 <em>s</em> <em>−</em>1 *|*<em>q</em> and <em>u</em></p>
+<p><em>0</em></p>
+<p><em>i</em></p>
+<p>= *|*2 <em>−</em>1 <em>−</em> <em>h</em>(<em>m</em>) <em>·</em> 2 <em>−</em>3 <em>s</em> <em>−</em>1 <em>|<strong>q</strong>.</em></p>
+<p>Note that here 2 <em>−</em>1 means the inverse of 2 mod <em>q</em>, not the fractional number</p>
+<p>1</p>
+<p>2</p>
+<p>. Although</p>
+<p>we do not know whether the third least signifificant bit is 0 or 1, by trying these two new</p>
+<p>settings of <em>t</em></p>
+<p><em>0</em></p>
+<p><em>i</em></p>
+<p>and <em>u</em></p>
+<p><em>0</em></p>
+<p><em>i</em></p>
+<p>, we are essentially guessing the third bit and construct <em>t</em></p>
+<p><em>0</em></p>
+<p><em>i</em></p>
+<p>and <em>u</em></p>
+<p><em>0</em></p>
+<p><em>i</em></p>
+<p>with</p>
+<p>3-bit leakage, of which the success probability is</p>
+<p>1</p>
+<p>2</p>
+<p>. Recall that typically, for 2-bit leakage,</p>
+<p>we need about 90 signatures to perform the attack. Thus the lattice basis is the following</p>
+<p>matrix <em>B</em>.</p>
+<p><em>B</em> =</p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p>8<em>q</em> 0 <em>· · ·</em> 0 0</p>
+<p>0 8</p>
+<p><em>q</em></p>
+<p><em>· · ·</em></p>
+<p>0 0</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>0 0</p>
+<p><em>· · ·</em></p>
+<p>8</p>
+<p><em>q</em></p>
+<p>0</p>
+<p>8</p>
+<p><em>t</em>1 8<em>t</em></p>
+<p>2</p>
+<p><em>· · ·</em> 8</p>
+<p><em>t</em></p>
+<p>90</p>
+<p>1</p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p><em>, C</em> =</p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p>16</p>
+<p><em>q</em></p>
+<p>0</p>
+<p><em>· · ·</em></p>
+<p>0 0</p>
+<p>0 16</p>
+<p><em>q</em></p>
+<p><em>· · ·</em></p>
+<p>0 0</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>0 0</p>
+<p><em>· · ·</em></p>
+<p>16</p>
+<p><em>q</em></p>
+<p>0</p>
+<p>16</p>
+<p><em>t</em></p>
+<p><em>0</em></p>
+<p>1</p>
+<p>16</p>
+<p><em>t</em></p>
+<p><em>0</em></p>
+<p>2</p>
+<p><em>· · ·</em> 16</p>
+<p><em>t</em></p>
+<p><em>0</em></p>
+<p>90</p>
+<p>1</p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p><em>.</em></p>
+<p>By guessing one more bit for all the signatures, we can construct the above matrix <em>C</em> with</p>
+<p>all the inequalities having 3-bit leakage. Of course, with this new matrix, we could attack</p>
+<p>160-bit (EC)DSA easily, since we know that for 3-bit leakage, standard lattice attacks work</p>
+<p>well. However, we are paying a price of 2 90 for guessing one more bit for all the signatures,</p>
+<p>which is unacceptable. In order to avoid the huge computation, instead of guessing one</p>
+<p>more bit for all the signatures, we could guess one more bit for part of the signatures, thus</p>
+<p>constructing a hybrid lattice. For instance, we can guess one more bit for 20 out of the 90</p>
+<p>signatures and keep the other 70 signatures unchanged as follows:</p>
+<p><em>D</em> =</p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p>16<em>q</em> <em>· · ·</em> 0 0 <em>· · ·</em> 0 0</p>
+<p>0</p>
+<p><em>· · ·</em></p>
+<p>0 0</p>
+<p><em>· · ·</em></p>
+<p>0 0</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>16</p>
+<p><em>q</em></p>
+<p>0</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>0</p>
+<p><em>· · ·</em></p>
+<p>0 8</p>
+<p><em>q</em></p>
+<p><em>· · ·</em></p>
+<p>0 0</p>
+<p>0</p>
+<p><em>· · ·</em></p>
+<p>0</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p><em>· · ·</em></p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>16</p>
+<p><em>t</em> <em>0</em>1</p>
+<p><em>· · ·</em></p>
+<p>16</p>
+<p><em>t</em> <em>0</em></p>
+<p>20</p>
+<p>8<em>t</em></p>
+<p>21</p>
+<p><em>· · ·</em> 8<em>t</em></p>
+<p>90</p>
+<p>1</p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p>Now we have increased the volume of the lattice by 2 20 times and perform the lattice</p>
+<p>attacks on the new matrix at the cost of 2 20 operations for guessing bits.</p>
+<p>This approach can be summarised as the following steps:</p>
+<p><em>•</em> Step 1: Determine integer constant</p>
+<p><em>k</em> and collect <em>d</em> signatures (<em>r**i</em> <em>, s**i</em>) (<em>i</em> = 1*,* <em>· · ·</em> <em>, d</em>),</p>
+<p>and construct</p>
+<p><em>t**i</em> and <em>u**i</em> with the original 2-bit leakage.</p>
+<p><em>•</em> Step 2: For k of them, guess and enumerate the third least signifificant bit of nonces and construct</p>
+<p><em>t</em></p>
+<p><em>0</em></p>
+<p><em>i</em></p>
+<p>and <em>u</em></p>
+<p><em>0</em></p>
+<p><em>i</em></p>
+<p>with 3-bit leakage. For all the other signatures, keep <em>t**i</em> and</p>
+<p><em>u**i</em> unchanged.</p>
+<p><em>•</em></p>
+<p>Step 3: Construct the hybrid lattice and use Kannan’s embedding method to fifind</p>
+<p>the secret key (for lattice reduction, we use BKZ–30). If failed, go back to step 2.Chao Sun, Thomas Espitau, Mehdi Tibouchi and Masayuki Abe 405</p>
+<p>Under worst circumstances, we have to perform 2 <em>k</em> times step 2 and 3, since there are 2 <em>k</em></p>
+<p>possibilities of the third bits of the nonces.</p>
+<p>With this method, we are able to attack those “borderline” cases: 160-bit (EC)DSA</p>
+<p>with 2-bit nonce leakage, 256-bit (EC)DSA with 3-bit nonce leakage, 384-bit (EC)DSA with</p>
+<p>4-bit nonce leakage. See the section of experimental results. Here we make a comparison</p>
+<p>with the approach in Section 4. Generally, the approach in Section 4 performs better than</p>
+<p>the approach in this section. The lattice attack on HNP essentially amounts to decoding</p>
+<p>a lattice point in a hypercube. When we guess bits of some of the signature nonces, we</p>
+<p>reduce the length of certain sides of this hypercube. On the contrary, when we guess bits</p>
+<p>of the secret key, we uniformly shrink the hypercube. For the same exhaustive search cost,</p>
+<p>the two decoding regions have the same volume, but the average (squared) error length is</p>
+<p>smaller in the second case.</p>
+<p><strong>6 Utilizing More Data to Improve Lattice Attacks</strong></p>
+<p>In 2000, Bleichenbacher presented a purely statistical attack technique against biased</p>
+<p>nonces at the IEEE P1363 meeting [Ble00]. The main idea of Bleichenbacher’s attack is to</p>
+<p>defifine a bias function and search for a candidate value that is near the secret key, thus</p>
+<p>fifinding many MSBs of the secret key. An advantage of Bleichenbacher attack is that it can</p>
+<p>deal with small biases in principle at the cost of using many signatures as input. There is</p>
+<p>a question in the community (mentioned by cryptanalysis experts on difffferent occasions,</p>
+<p>e.g., ECC-17 by Tibouchi [Tib17], Lattice Camp-20 by Heninger [Hen20]): <em>Is it possible to</em></p>
+<p><em>improve lattice attacks with many more signatures?</em> We give a solution to this question</p>
+<p>and again we are in the context of 160-bit modulus with 2-bit nonce leakage.</p>
+<p><strong>6.1 From Bleichenbacher to Lattice</strong></p>
+<p>Motivated by Bleichenbacher attack, similar ideas could be applied to lattice attacks.</p>
+<p>Suppose that we have <em>d</em> HNP inequalities with <em>l</em>-bit leakage</p>
+<p><em>|<em><em>α</em> <em>·</em> *t</em>*i</em> <em>−</em> <em>u**i</em> <em>|<em><em>q</em> <em>&lt; q/<em>2 <em>l</em> (<em>i</em> = 1</em>,</em> 2</em>, . . . , d</em>),</p>
+<p>and write the secret key <em>α</em> as</p>
+<p><em>α</em> = <em>α</em>1 <em>·</em> 2 <em>c</em> + <em>α</em>2 (0 <em>≤</em> <em>α</em>2 <em>&lt;</em> 2 <em>c</em> ).</p>
+<p>Where <em>α</em>1 is the (160 <em>−</em> <em>c</em>) MSBs of <em>α</em> and <em>α</em>2 is the remaining LSBs. If <em>t**i</em> (<em>i</em> = 1*,* 2*, . . . , d*)</p>
+<p>is small enough, <em>α</em>2 <em>·</em> <em>t**i</em> (<em>i</em> = 1*,* 2*, . . . , d*) will be a very small perturbation compared with</p>
+<p>*q/*2 <em>l</em> . This means that with high probability, <em>α</em>1 <em>·</em> 2 <em>c</em> will satisfy all the <em>d</em> inequalities:</p>
+<p><em>|**α</em>1 <em>·</em> 2 <em>c</em> <em>·</em> <em>t**i</em> <em>−</em> <em>u**i</em> <em>|<em><em>q</em> <em>&lt; q/<em>2 <em>l</em> (<em>i</em> = 1</em>,</em> 2</em>, . . . , d</em>).</p>
+<p>Then construct the lattice as:</p>
+<p><em>B</em> =</p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p>2 <em>l</em>+1<em>q</em></p>
+<p>0</p>
+<p><em>· · ·</em></p>
+<p>0 0</p>
+<p>0 2</p>
+<p><em>l</em></p>
+<p>+1</p>
+<p><em>q</em></p>
+<p><em>· · ·</em></p>
+<p>0 0</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>0 0</p>
+<p><em>· · ·</em></p>
+<p>2</p>
+<p><em>l</em></p>
+<p>+1</p>
+<p><em>q</em></p>
+<p>0</p>
+<p>2 <em>c</em> <em>·</em> 2</p>
+<p><em>l</em>+1<em>t</em>1 2 <em>c</em> <em>·</em></p>
+<p>2</p>
+<p><em>l</em>+1</p>
+<p><em>t</em>2</p>
+<p><em>· · ·</em></p>
+<p>2 <em>c</em></p>
+<p><em>·</em></p>
+<p>2</p>
+<p><em>l</em>+1</p>
+<p><em>t**d</em></p>
+<p>2</p>
+<p><em>c</em></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p>In this lattice, (<em>α</em>12 <em>c</em> <em>·<em>2 <em>l</em>+1</em>t</em>1+<em>c</em>12 <em>l</em>+1<em>q, α</em>12 <em>c</em> <em>·<em>2 <em>l</em>+1</em>t</em>2+<em>c</em>22 <em>l</em>+1<em>q, . . . , α</em>12 <em>c</em> <em>·<em>2 <em>l</em>+1</em>t**d</em>+<em>c**d</em>2 <em>l</em>+1<em>q, α</em>12 <em>c</em> )</p>
+<p>will be the hidden lattice vector. The advantage that we get is that the volume of the</p>
+<p>lattice is increased by 2 <em>c</em> times, while <em>k</em> <strong>e</strong><em>k</em> almost keeps unchanged, thus making the attack</p>
+<p>much easier. Note that now we do not do enumeration of bits as in previous sections.</p>
+<p>This attack can be summarised as the following steps:406 Guessing Bits: Improved Lattice Attacks on (EC)DSA with Nonce Leakage</p>
+<p><em>•</em> Step 1: Collect signatures (<em>r, s</em>) and set:</p>
+<p><em>t</em> = 2<em>−**l</em> <em>s</em> <em>−</em>1 <em>r</em> mod <em>q</em></p>
+<p><em>u</em> = <em>−</em>2 <em>−**l</em> <em>s</em> <em>−</em>1<em>h</em>(<em>m</em>) mod <em>q</em></p>
+<p>If <em>t</em> is small enough (smaller than some predetermined bound), then keep the (<em>t, u</em>)</p>
+<p>pairs, otherwise throw it away.</p>
+<p><em>•</em> Step 2: Keep doing step 1 until we get <em>d</em> pairs (<em>t**i</em> <em>, u**i</em>) (<em>i</em> = 1*, . . . , d*).</p>
+<p><em>•</em> Step 3: Construct the above lattice and use Kannan’s embedding method to do</p>
+<p>lattice attacks.</p>
+<p><em>•</em> Step 4: Find <em>α</em>1 which is the (160 <em>−</em> <em>c</em>) MSBs of <em>α</em>.</p>
+<p><em>•</em> Step 5: Find the remaining bits of <em>α</em> (for example, we can construct a HNP instance</p>
+<p>for the remaining bits).</p>
+<p>As we previously discussed, once we have recovered many MSBs of <em>α</em>, recovering the</p>
+<p>remaining bits becomes pretty easy.</p>
+<p><strong>6.2 A Concrete Example</strong></p>
+<p>In order to make it clear, we show a concrete example here. For 160-bit (EC)DSA with</p>
+<p>2-bit nonce leakage, we collect <em>t</em> which is less than 2 140 and write the secret key <em>α</em> as:</p>
+<p><em>α</em> = <em>α</em>1 <em>·</em> 2 10 + <em>α</em>2 (0 <em>≤</em> <em>α</em>2 <em>&lt;</em> 2 10)</p>
+<p>and we have:</p>
+<p><em>|<em><em>α</em> <em>·</em> *t</em>*i</em> <em>−</em> <em>u**i</em> <em>|<em><em>q</em> <em>&lt; q/<em>2 <em>l</em> (<em>i</em> = 1</em>,</em> 2</em>, . . . , d</em>),</p>
+<p><em>|**α</em>1 <em>·</em> 2 10 <em>·</em> <em>t**i</em> + <em>α</em>2 <em>·</em> <em>t**i</em> <em>−</em> <em>u**i</em> <em>|<em><em>q</em> <em>&lt; q/<em>2 <em>l</em> (<em>i</em> = 1</em>,</em> 2</em>, . . . , d</em>).</p>
+<p>Since <em>α</em>2 is less than 2 10 , <em>α</em>2 <em>·</em> <em>t</em> is upperbounded by 2 150 , *q/*2 <em>l</em> has about 158 bits, so</p>
+<p>as long as the value <em>|<em><em>α</em> <em>·</em> *t</em>*i</em> <em>−</em> <em>u**i</em> *|<em><em>q</em> does not lie on the edge of the interval (0</em>, q/*2 <em>l</em> ) (which</p>
+<p>happens with small probability), we could just throw the term <em>α</em>2 <em>·</em> <em>t**i</em> away and have:</p>
+<p><em>|**α</em>1 <em>·</em> 2 10 <em>·</em> <em>t**i</em> <em>−</em> <em>u**i</em> <em>|<em><em>q</em> <em>&lt; q/<em>2 <em>l</em> (<em>i</em> = 1</em>,</em> 2</em>, . . . , d</em>).</p>
+<p>In order to collect 90 signatures where <em>t &lt;</em> 2 140, we have to sample about 90 <em>·</em> 2 20 <em>≈</em> 2 27</p>
+<p>signatures. The advantage is that we increase the volume of the lattice almost for free</p>
+<p>(considering the fact that sampling a signature is much more effiffifficient than doing one BKZ–</p>
+<p>30 operation). Therefore, at the cost of using 2 27 signatures, we are able to attack 160-bit</p>
+<p>(EC)DSA with 2-bit nonce leakage in just one BKZ–30 operation, which is signifificantly</p>
+<p>faster than previous results. For more detail, see the section of experimental results.</p>
+<p><strong>7 Batch SVP and Kannan Embedding Factor</strong></p>
+<p><strong>7.1 Batch SVP</strong></p>
+<p>In section 4 and section 5, we have to do 2 <em>c</em> (typically we set <em>c</em> = 15, 20) BKZ–30 operations</p>
+<p>on the following matrices:</p>
+<p><em>C</em> =</p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p>2 <em>l</em>+1<em>q</em> 0 <em>· · ·</em> 0 0 0</p>
+<p>0 2</p>
+<p><em>l</em></p>
+<p>+1</p>
+<p><em>q</em></p>
+<p><em>· · ·</em></p>
+<p>0 0 0</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>0 0</p>
+<p><em>· · ·</em></p>
+<p>2</p>
+<p><em>l</em></p>
+<p>+1</p>
+<p><em>q</em></p>
+<p>0 0</p>
+<p>2 <em>l</em>+1</p>
+<p><em>t</em>1 2 <em>l</em></p>
+<p>+1</p>
+<p><em>t</em></p>
+<p>2</p>
+<p><em>· · ·</em></p>
+<p>2</p>
+<p><em>l</em></p>
+<p>+1</p>
+<p><em>t</em></p>
+<p><em>d</em></p>
+<p>1 0</p>
+<p><em>v</em></p>
+<p>1</p>
+<p><em>v</em></p>
+<p>2</p>
+<p><em>· · ·</em></p>
+<p><em>v</em></p>
+<p><em>d</em></p>
+<p>0</p>
+<p><em>q</em></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p>*.*Chao Sun, Thomas Espitau, Mehdi Tibouchi and Masayuki Abe 407</p>
+<p><strong>Table 4:</strong> Kannan embedding factor test.</p>
+<p>Modulus Leakage Signatures Kannan embedding factor Success rate</p>
+<p>160-bit 3 80</p>
+<p><em>q</em></p>
+<p>93/100</p>
+<p>160-bit 3 80</p>
+<p>(<em>q</em> <em>−</em> 1)*/*2</p>
+<p>97/100</p>
+<p>160-bit 3 80</p>
+<p><em>q</em> 2</p>
+<p>5/100</p>
+<p>160-bit 3 80</p>
+<p>1</p>
+<p>0/100</p>
+<p>Write <em>C</em> as</p>
+<p><em>C</em> = <em>B</em></p>
+<p>0</p>
+<p><strong>v</strong></p>
+<p><em>q</em> <em>.</em></p>
+<p>Each time we perform BKZ operations, only the last row of matrix <em>C</em> is changed and</p>
+<p><em>B</em> is fifixed. One BKZ–30 operation on a 90-dimensional lattice typically takes about 3</p>
+<p>minutes with fplll [dt20] library on Sagemath [The20]. If c = 2 15, the time complexity</p>
+<p>will be 2 15 <em>·</em> 3 minutes without using multiple cores. Although this is practical time, we</p>
+<p>could further improve the time complexity. For simplicity, we use LLL as an example here</p>
+<p>(for BKZ it is similar). In LLL algorithm [LLL82], there is an index <em>k</em> starting from 1,</p>
+<p>which represents the row currently being reduced. Besides, there is an exchange condition,</p>
+<p>and if it is satisfified, two adjacent rows will be exchanged. After exchanging rows and</p>
+<p>recomputing the Gram–Schmidt norm, size reduction will be performed.</p>
+<p>If we consider the process of LLL reduction on the matrix <em>C</em>, essentially it will fifirst</p>
+<p>reduce the submatrix <em>B</em>, so every time the reduction on <em>B</em> is repeated, which is not</p>
+<p>necessary. We come up with a simple solution:</p>
+<p><em>•</em> Step 1: BKZ-reduce the submatrix <em>B</em> (preprocessing).</p>
+<p><em>•</em> Step 2: Do Kannan embedding and construct the matrix <em>C</em>.</p>
+<p><em>•</em> Step 3: Do BKZ on the matrix <em>C</em> again.</p>
+<p>This actually means that we preprocess the submatrix <em>B</em>. In this way, we save a lot</p>
+<p>of computation. With this preprocessing, one BKZ–30 operation typically takes several</p>
+<p>seconds, while the original one takes about 3 minutes.</p>
+<p><strong>7.2 Kannan Embedding Factor</strong></p>
+<p>In our experiments, we observe that lattice attacks on (EC)DSA are very sensitive to the</p>
+<p>Kannan embedding factor. To the best of our knowledge, there are only a few works that</p>
+<p>discuss how to choose the factor. For example, in Galbraith’s book [Gal12], the embedding</p>
+<p>factor is set to 1 by default, and in [WAT17], Kannan embedding factor for LWE lattices</p>
+<p>(very difffferent context) is discussed. Therefore, we give a simple analysis for HNP lattice</p>
+<p>for completeness. As we can see from Table 4, if the factor is either too small or too large,</p>
+<p>the success rate becomes very low.</p>
+<p>Here we give an explanation why this happens. Denote the Kannan embedding factor</p>
+<p>as <em>γ</em>. For simplicity, we analyze LLL reduction.</p>
+<p><strong>Case 1: Kannan embedding factor is too large.</strong> Recall that the embedded matrix <em>C</em> is</p>
+<p><em>C</em> = <em>B</em></p>
+<p>0</p>
+<p><strong>v</strong></p>
+<p><em>γ</em></p>
+<p><em>.</em></p>
+<p>The Gram–Schmidt norm of the last row is <em>γ</em>, and if <em>γ</em> is too large, after LLL reduction</p>
+<p>on the submatrix <em>B</em>, the exchange condition will not be satisfified, then only one round of</p>
+<p>size reduction will be performed (reduce the last row from the fifirst (d + 1) rows) and the408 Guessing Bits: Improved Lattice Attacks on (EC)DSA with Nonce Leakage</p>
+<p><strong>Table 5:</strong> A comparison of the CVP and SVP approaches.</p>
+<p>Modulus Leakage Nearest plane Kannan’s embedding method</p>
+<p>160-bit 4-bit 37/100 100/100</p>
+<p>160-bit 3-bit 0/100 91/100</p>
+<p>algorithm terminates. By contrast, if <em>γ</em> is properly valued, the exchange condition will</p>
+<p>be satisfified and the last row will be exchanged to some other row. Then Gram–Schmidt</p>
+<p>norm will be recomputed and one round of size reduction will be performed. Typically,</p>
+<p>the exchange happens many times, so many rounds of size reduction will be performed.</p>
+<p>Therefore, if <em>γ</em> is too large, the lattice will get much less reduced.</p>
+<p><strong>Case 2: Kannan embedding factor is too small.</strong> Since the Gram–Schmidt norm of the</p>
+<p>last row is <em>γ</em>, if the Kannan embedding factor is too small, the Gram–Schmidt norm of the</p>
+<p>last row will be very small. After exchanging rows, size reduction will be performed. Since</p>
+<p>the Gram–Schmidt norm is small, when performing size reduction on other rows, many</p>
+<p>multiples of the target vector <strong>v</strong> will be added to other rows. However, since</p>
+<p><em>B</em> =</p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p>2 <em>l</em>+1<em>q</em></p>
+<p>0</p>
+<p><em>· · ·</em></p>
+<p>0 0</p>
+<p>0 2</p>
+<p><em>l</em></p>
+<p>+1</p>
+<p><em>q</em></p>
+<p><em>· · ·</em></p>
+<p>0 0</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>.</p>
+<p>0 0</p>
+<p><em>· · ·</em></p>
+<p>2</p>
+<p><em>l</em></p>
+<p>+1</p>
+<p><em>q</em></p>
+<p>0</p>
+<p>2 <em>l</em>+1</p>
+<p><em>t</em>1 2 <em>l</em></p>
+<p>+1</p>
+<p><em>t</em></p>
+<p>2</p>
+<p><em>· · ·</em></p>
+<p>2</p>
+<p><em>l</em></p>
+<p>+1</p>
+<p><em>t</em></p>
+<p><em>d</em></p>
+<p>1</p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p><em>,</em></p>
+<p>what we want is <em>α</em> <em>·</em> (2<em>l</em>+1<em>t</em>1*,* 2 <em>l</em>+1<em>t</em>2*, . . . ,* 2 <em>l</em>+1<em>t<strong>d</strong>,</em> 1) <em>−</em> <strong>v</strong>, so we do not want to use the target</p>
+<p>vector <strong>v</strong> to reduce other vectors. If <em>γ</em> is too small, we will fifind that all the vectors in the</p>
+<p>reduced basis will have a very large coeffiffifficient of <strong>v</strong>, which is not our goal.</p>
+<p><strong>8 Gap Between the CVP and SVP Approaches</strong></p>
+<p>As mentioned in [JSSS20], we also observe a certain gap between the nearest plane algorithm</p>
+<p>and Kannan’s embedding method. In this attack, Kannan’s embedding method always</p>
+<p>outperforms nearest plane algorithm to some extent.</p>
+<p>As we can see from Table 5, for 160-bit (EC)DSA with 4-bit nonce leakage, both</p>
+<p>approaches work well. However, nearest plane algorithm never succeeds for 3-bit leakage,</p>
+<p>while Kannan’s embedding method works quite well.</p>
+<p><strong>Reason for the Gap.</strong> Essentially, nearest plane algorithm can be regarded as one round</p>
+<p>of size reduction in the embedded lattice. Recall the process in the previous section, if</p>
+<p>the Kannan embedding factor is large enough, nearest plane algorithm will be the same</p>
+<p>as Kannan embedding, because for the last row of the embedded lattice, the exchange</p>
+<p>condition will not be satisfified and only one round of size reduction takes place, which is</p>
+<p>essentially the same as nearest plane. However, if the Kannan embedding factor is properly</p>
+<p>valued, many exchanges will happen. After one exchange, one round of size reduction will</p>
+<p>take place, which means that Kannan’s embedding method will make the target vector</p>
+<p>more reduced compared with nearest plane algorithm.</p>
+<p><strong>9 Experimental Results</strong></p>
+<p>In this section, we show the result of our practical experiments. All the experiments are</p>
+<p>carried out on AMD Ryzen 3970x with Sagemath [The20] and fplll [dt20] library. ForChao Sun, Thomas Espitau, Mehdi Tibouchi and Masayuki Abe 409</p>
+<p>lattice reduction algorithms, we are using BKZ–30. The source code is available in [Sun21].</p>
+<p><strong>9.1 Guessing Bits of Secret Key</strong></p>
+<p>As we can see in Figure 2, as the number of guessed bits increases, the success rate increases.</p>
+<p>Take 160-bit (EC)DSA with 2-bit nonce leakage for example, if we guess 15 bits for the</p>
+<p>secret key, we succeed in recovering the secret key 12 times among 200 experiments. Since</p>
+<p>we enumerate 15 bits of the secret key, the time complexity is upper bounded by 2 15</p>
+<p>BKZ–30 operations (the expected number is 2 14). In this way, we are able to quantify the</p>
+<p>complexity in terms of BKZ operations. Instead of directly using real-time, the advantage</p>
+<p>is that it gives us a clear impression of the time complexity and this is independent of the</p>
+<p>machine being used. Besides, it is easy to estimate the practical attack time. For instance,</p>
+<p>with Ryzen 3970x and batch SVP technique described in section 7, one BKZ–30 operation</p>
+<p>on a 90-dimensional lattice takes 40 seconds (on average) on a single core, so the expected</p>
+<p>time is 2 14</p>
+<p><em>·<em>40</em>s</em></p>
+<p>32</p>
+<p><em>≈</em> 10200<em>s</em>, which is several hours.</p>
+<p><strong>9.2 Guessing Bits of Nonces</strong></p>
+<p>Similarly, for 160-bit (EC)DSA with 2-bit nonce leakage, if guessing 1 more bit for 20 of</p>
+<p>the 90 signatures, we succeed in recovering the secret key 14 times out of 200 experiments,</p>
+<p>so the time complexity is 2 20 BKZ–30 operations. Actually, we could even estimate the</p>
+<p>time complexity for 1-bit nonce leakage. What we could do is to guess 2 more bits for 20 of</p>
+<p>the signatures and guess 1 more bit for the other 70 signatures, so the time complexity is</p>
+<p>4 20 <em>·</em> 2 70 = 2110 BKZ–30 operations. Although this is not practical (thus not so meaningful),</p>
+<p>it is an estimate of computation cost for 1-bit leakage.</p>
+<p><strong>9.3 Improving Lattice Attacks with More Data</strong></p>
+<p>Recall that in Section 6, we discussed that for one HNP inequality *|<em><em>αt</em> <em>−</em> <em>u</em></em>|*<em>q</em> *&lt; q/*2 <em>l</em> , if we</p>
+<p>get small <em>t</em>, then we can construct a lattice that has larger volume. In our experiments,</p>
+<p>summarized in Table 6, we fifind that for 160, 256, 384-bit modulus <em>q</em>, if <em>t</em> has less than 140,</p>
+<p>226, 344 bits respectively, we can perform the attack. Take 160-bit modulus for example,</p>
+<p>in order to get 90 inequalities where all the <em>t</em> <em>≤</em> 2 140, we have to sample 2 20 <em>·</em> 90 <em>≈</em> 2 27</p>
+<p>signatures. This may seem too many in practical setting, but the advantage is that we</p>
+<p>could recover about 150 MSBs of the secret key in just one BKZ-30 operation.</p>
+<p>0</p>
+<p>10</p>
+<p>20</p>
+<p>30</p>
+<p>40</p>
+<p>0</p>
+<p>20</p>
+<p>40</p>
+<p>60</p>
+<p>80</p>
+<p>100</p>
+<p>Number of guessed bits</p>
+<p>Guessing bits of secret key</p>
+<p>160-bit modulus with 2-bit nonce leakage</p>
+<p>256-bit modulus with 3-bit nonce leakage</p>
+<p>384-bit modulus with 4-bit nonce leakage</p>
+<p>0</p>
+<p>10</p>
+<p>20</p>
+<p>30</p>
+<p>40</p>
+<p>0</p>
+<p>20</p>
+<p>40</p>
+<p>60</p>
+<p>80</p>
+<p>100</p>
+<p>Number of guessed bits</p>
+<p>Guessing bits of nonces</p>
+<p>160-bit modulus with 2-bit nonce leakage</p>
+<p>256-bit modulus with 3-bit nonce leakage</p>
+<p>384-bit modulus with 4-bit nonce leakage</p>
+<p><strong>Figure 2:</strong> Experimental results: guessing bits of the secret key vs. of the nonces.</p>
+<p>Success rate[%]</p>
+<p>Success rate[%]410 Guessing Bits: Improved Lattice Attacks on (EC)DSA with Nonce Leakage</p>
+<p><strong>Table 6:</strong> Utilizing more data to improve lattice attacks.</p>
+<p>Modulus Leakage Upper bound on <em>t</em></p>
+<p>Signatures Time complexity Success rate</p>
+<p>160-bit 2-bit</p>
+<p>2 140</p>
+<p>2 27</p>
+<p>1 BKZ-30 30/200</p>
+<p>256-bit 3-bit</p>
+<p>2 226</p>
+<p>2 37</p>
+<p>1 BKZ-30 27/200</p>
+<p>384-bit 4-bit</p>
+<p>2 344</p>
+<p>2 47</p>
+<p>1 BKZ-30 62/200</p>
+<p><strong>9.4 Experiments on the TPM–FAIL Dataset</strong></p>
+<p>We also carry out experiments on the TPM–FAIL [MSEH20] dataset (256-bit ECDSA).</p>
+<p>The fifirst row of the dataset contains the public key and the message being signed. Each of</p>
+<p>the other rows contains (<em>r, s</em>) and <em>t</em>, where (<em>r, s</em>) is the signature and <em>t</em> is the signing time.</p>
+<p>One typical way to perform the attack is:</p>
+<p><em>•</em> Collect <em>N</em> signatures.</p>
+<p><em>•</em> Choose <em>d</em> out of the <em>N</em> signatures, whose signing time is the fastest.</p>
+<p><em>•</em> For each of the <em>d</em> signatures, assign leakage <em>l</em>.</p>
+<p><em>•</em> Construct HNP inequalities and perform lattice attacks.</p>
+<p>For 256-bit modulus, if setting <em>l</em> = 3, typically <em>d</em> <em>≈</em> 90. In [MSEH20], the authors use</p>
+<p>about 40000 signatures and in Minerva [JSSS20], a new technique of geometric assignment</p>
+<p>of leakage is proposed: assign half of the <em>d</em> signatures with leakage <em>l</em> = 3, one fourth of</p>
+<p>them having leakage <em>l</em> = 4, and so on. In our experiments, we combine these techniques</p>
+<p>with our method of guessing bits of the secret key and come up with the following attack:</p>
+<p><em>•</em> Randomly collect 800 signatures.</p>
+<p><em>•</em> Choose 90 out of the 800 signatures, whose signing time is the fastest.</p>
+<p><em>•</em> Geometrically assign the leakage <em>l</em>.</p>
+<p><em>•</em> Guess and enumerate some LSBs of the secret key and perform lattice attacks</p>
+<p>described in section 4.</p>
+<p>We do 100 experiments and succeed 3 times. In this way, with only 800 signatures available,</p>
+<p>we are able to recover the secret key for TPM–FAIL dataset. For the most part of this paper,</p>
+<p>we are in a setting where there is no noise in the sense that leakage is assigned correctly</p>
+<p>for each signature. However, this is not the case in general in practice. If the number of</p>
+<p>signatures is enough, it is easy to assign the leakage correctly with high probability, but</p>
+<p>if <em>N</em> = 800, it is unavoidable that some of the assignment are wrong, which is somewhat</p>
+<p>annoying and makes the success rate very low. There are many robust techniques in</p>
+<p>Minerva [JSSS20] for dealing with noise, which are very important contribution of that</p>
+<p>paper. For example, the <em>random subset technique</em> in Minerva could be utilized: instead</p>
+<p>of choosing <em>d</em> out of <em>N</em> signatures, we could choose 1*.<em>5</em>d* signatures and collect a random</p>
+<p>subset having <em>d</em> elements. Besides, the <em>CVP + flflip technique</em> can be applied: change <strong>u</strong></p>
+<p>to correct errors (this part can even be generalized with our nonce guessing technique by</p>
+<p>flflipping more bits). Considering that our work is largely orthogonal and complementary to</p>
+<p>Minerva and we only use BKZ–30 (which could be replaced with stronger lattice reduction</p>
+<p>algorithms, e.g., [CN11, AWHT16, ADH+19, EK20, KEF21]), it is fair to say that our</p>
+<p>approaches help improving the attack.</p>
+<p><strong>Acknowledgement</strong></p>
+<p>We are thankful to Masaya Yasuda for helpful discussions. We also would like to thank</p>
+<p>the anonymous reviewers for their useful suggestions and comments.</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/CTF-Note/" class="category-chain-item">CTF Note</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/DSA/">#DSA</a>
+      
+        <a href="/tags/ECDSA/">#ECDSA</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Guessing Bits Improved Lattice Attacks on (EC)DSA with Nonce Leakage</div>
+      <div>http://example.com/2023/02/27/Note for 《Guessing Bits Improved Lattice Attacks on (EC)DSA with Nonce Leakage》/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Cot287</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年2月27日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/02/27/LLL%E7%AE%97%E6%B3%95/" title="">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile"></span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/02/27/Schnorr%E7%AD%BE%E5%90%8D/" title="Schnorr 签名">
+                        <span class="hidden-mobile">Schnorr 签名</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

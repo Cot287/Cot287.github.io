@@ -16,15 +16,15 @@
   <meta name="author" content="Cot287">
   <meta name="keywords" content="">
   
-    <meta name="description" content="WORDS        order 阶 succinctly 简洁地；简便地   subtraction xxxxxxxxxx void heaping(int a[],int cnt,int i){    while (true){        int maxpos &#x3D; i;                      if(a[2 * i] &gt; a[maxpos]&amp;&amp;am">
+    <meta name="description" content="WORDS        order 阶 succinctly 简洁地；简便地   subtraction  investigate 调查；研究   interchangeably [数] 可交换地 unit 群   confidential 保密的 via 经由   adversary 敌手 commerce 商业，贸易   incarnation 化身 canon 标准，准则   int">
 <meta property="og:type" content="article">
 <meta property="og:title" content="D1 for ctypto">
 <meta property="og:url" content="http://example.com/2023/02/13/D1%20for%20ctypto/index.html">
 <meta property="og:site_name" content="Cot287&#39;s blog">
-<meta property="og:description" content="WORDS        order 阶 succinctly 简洁地；简便地   subtraction xxxxxxxxxx void heaping(int a[],int cnt,int i){    while (true){        int maxpos &#x3D; i;                      if(a[2 * i] &gt; a[maxpos]&amp;&amp;am">
+<meta property="og:description" content="WORDS        order 阶 succinctly 简洁地；简便地   subtraction  investigate 调查；研究   interchangeably [数] 可交换地 unit 群   confidential 保密的 via 经由   adversary 敌手 commerce 商业，贸易   incarnation 化身 canon 标准，准则   int">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-02-13T11:47:51.763Z">
-<meta property="article:modified_time" content="2023-02-19T15:07:36.204Z">
+<meta property="article:modified_time" content="2023-02-27T14:45:50.359Z">
 <meta property="article:author" content="Cot287">
 <meta property="article:tag" content="crypto">
 <meta name="twitter:card" content="summary_large_image">
@@ -224,7 +224,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.6k 字
+          2.7k 字
         
       </span>
     
@@ -235,7 +235,7 @@
         
         
         
-          30 分钟
+          23 分钟
         
       </span>
     
@@ -296,7 +296,7 @@
 </tr>
 <tr>
 <td><strong>subtraction</strong></td>
-<td>xxxxxxxxxx void heaping(int a[],int cnt,int i){    while (true){        int maxpos = i;                      if(a[2 * i] &gt; a[maxpos]&amp;&amp; 2 * i &lt;= cnt)maxpos = 2 * i;  //是否左节点会大于该节点        if (a[2 * i + 1] &gt; a[maxpos] &amp;&amp; 2 * i &lt;= cnt)maxpos = 2 * i + 1;    //是否右节点会大于该节点/左节点,注意这里是maxpos不是i因为右节点可能会大于左节点,        if(i<mark>maxpos)break;         //如果该节点大于左节点又大于右节点,说明不需要交换堆化跳出循环,        swap(a,maxpos,i);          //把三个结点中最大的那个,换到结点位置        i = maxpos;                    }}void delete_node(int a[],int cnt){    if(cnt</mark>0) return;    a[1] = a[cnt + 1];    cnt–;    heaping_(a, cnt, 1);}C</td>
+<td></td>
 <td>investigate</td>
 <td>调查；研究</td>
 </tr>
@@ -387,7 +387,7 @@
 <tr>
 <td></td>
 <td></td>
-<td>xxxxxxxxxx # sagefrom gmpy2 import gcdextfrom random import randint# r|p-1def AMM_rth_root(delta:int, r:int, p:int):    g = GF(p)    delta = g(delta)    rho = g(randint(1, p))    while pow(rho,(p-1)//r,p) == 1:        rho = g(randint(1, p))​    s, t = p-1, 0    while s%r == 0:        s = s // r        t += 1    _, alpha, _ = gcdext(r,s)    alpha = alpha % s    a = rho ^ ((p-1) // r)    b = delta ^ (r*alpha-1)    c = rho ^ s    h = 1        for i in range(1,t):        d = b ^ (r ^ (t-1-i))        if d == 1: j = 0        else : j = -discrete_log(log(a,d))        b = b * (c^r) ^ j        h = h * c^j        c = c^r    return delta^alpha * hpython</td>
+<td></td>
 <td></td>
 </tr>
 </tbody>
