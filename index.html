@@ -363,7 +363,10 @@
 <p>这里需要注意，要将上述配置中的 <code>用户名</code> 替换为自己的 GitHub 用户名。<code>type字段</code> 指定部署类型为 <code>git</code>，<code>repo字段</code>是 GitHub 仓库的地址，branch字段指定要推送的分支，通常是main（如果您的仓库使用的是默认的主分支）。</p>
 <img src="/2024/12/10/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/18.png" alt="18" style="zoom:50%;">
 
-<p>（四）部署博客<br>在博客目录下运行hexo deploy命令。这个命令会首先根据source目录中的内容和配置信息生成静态文件，然后使用 hexo - deployer - git 插件将这些静态文件推送到 GitHub 仓库中。在推送过程中，命令行可能会提示您输入 GitHub 的用户名和密码（如果您没有配置 SSH 密钥）。输入正确的信息后，推送操作会继续进行。推送完成后，稍等片刻（一般几分钟内），就可以通过你的用户名.github.io访问您的个人博客了。如果遇到访问问题，可以检查仓库设置、域名解析（如果有自定义域名）以及文件推送是否完整等情况。</p>
+<h4 id="7-4-部署博客"><a href="#7-4-部署博客" class="headerlink" title="7.4 部署博客"></a>7.4 部署博客</h4><p>在博客目录下运行 <code>hexo d</code> 命令。这个命令会首先根据 <code>source</code> 目录中的内容和配置信息生成静态文件，然后使用 <code>hexo - deployer - git</code> 插件将这些静态文件推送到 GitHub 仓库中。在推送过程中，命令行可能会提示您输入 GitHub 的用户名和密码（如果您没有配置 SSH 密钥），这里我选了通过浏览器验证，然后有下面的弹窗。</p>
+<img src="/2024/12/10/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/19.png" alt="19" style="zoom:50%;">
+
+<p>选择 <code>Authorize git-ecosystem</code> 就行了，一般几分钟内就可以通过 <code>用户名.github.io</code> 访问个人博客了。</p>
 
           
         
