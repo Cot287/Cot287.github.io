@@ -114,7 +114,7 @@
 <meta property="og:image" content="http://example.com/2024/12/10/%E6%9D%82%E9%A1%B9/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/18.png">
 <meta property="og:image" content="http://example.com/2024/12/10/%E6%9D%82%E9%A1%B9/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/19.png">
 <meta property="article:published_time" content="2024-12-10T05:00:00.000Z">
-<meta property="article:modified_time" content="2024-12-16T11:43:33.516Z">
+<meta property="article:modified_time" content="2024-12-22T08:59:44.023Z">
 <meta property="article:author" content="Cot287">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/2024/12/10/%E6%9D%82%E9%A1%B9/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/1.png">
@@ -398,16 +398,19 @@ Windows 上是“命令提示符”或“PowerShell”，在 Mac OS 和 Linux
 <p>配置npm
 镜像：<code>npm config set registry https://registry.npmmirror.com</code></p>
 <p>（<del>没加速后面hexo init 巨慢</del>）</p>
+<hr>
 <h3 id="git">Git</h3>
 <p>Git 是用于管理博客代码版本以及将博客内容推送到 GitHub
 的重要工具。前往 Git
 官方网站（https://git-scm.com/），同样根据操作系统类型下载合适的安装包进行安装。安装完成后，在命令行中输入git
 --version，若显示 Git 的版本信息，则表明安装成功。</p>
 <p><img src="/2024/12/10/%E6%9D%82%E9%A1%B9/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/2.png"></p>
+<hr>
 <h3 id="github-账号">GitHub 账号</h3>
 <p>打开浏览器，访问 GitHub
 官网（https://github.com/）。在首页上找到“Sign
 up”按钮，点击后按照提示填写相关信息，包括用户名、邮箱地址和密码等，完成注册过程。这个账号将作为存储博客文件的仓库，承载着博客的所有代码和内容。</p>
+<hr>
 <h3 id="安装-hexo">安装 Hexo</h3>
 <h4 id="创建博客目录">创建博客目录</h4>
 <p>在本地计算机的硬盘上，选择一个您方便管理的位置（例如 D
@@ -442,6 +445,7 @@ Markdown 格式来撰写文章。在这个目录下创建的 Markdown 文件将�
 HTML、CSS、JavaScript 等，它们将被部署到服务器（如
 GitHub）上，供用户通过浏览器访问。
 此外，还有其他一些辅助文件和文件夹，如scaffolds用于生成文章或页面的模板，package.json用于管理项目的依赖等。</p>
+<hr>
 <h3 id="配置-hexo">配置 Hexo</h3>
 <h4 id="修改配置文件">修改配置文件</h4>
 <p>使用文本编辑器（如 Windows 上的 Notepad++、Sublime Text，Mac OS 上的
@@ -520,6 +524,7 @@ Bash）运行以下命令即可：<code>npm install --save live2d-widget-model-h
 <p>打开 主题配置文件，搜索 menu，修改如下：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">menu:</span><br><span class="line">  home: /|| home</span><br><span class="line"><span class="meta prompt_">  #</span><span class="language-bash">about: /about/|| user</span></span><br><span class="line">  tags: /tags/|| tags</span><br><span class="line">  categories: /categories/|| th</span><br><span class="line">  archives: /archives/|| archive</span><br><span class="line"><span class="meta prompt_">  #</span><span class="language-bash">schedule: /schedule/|| calendar</span></span><br><span class="line"><span class="meta prompt_">  #</span><span class="language-bash">sitemap: /sitemap.xml|| sitemap</span></span><br><span class="line"><span class="meta prompt_">  #</span><span class="language-bash">commonweal: /404/|| heartbeat</span></span><br></pre></td></tr></table></figure>
 <p>这里搜索 <code>language</code> 设置为 <code>zh-Hans</code></p>
+<hr>
 <h3 id="创建并撰写博客文章">创建并撰写博客文章</h3>
 <h4 id="创建新文章">创建新文章</h4>
 <p>在博客目录下打开命令行，运行 <code>hexo new 文章标题</code>
@@ -565,6 +570,7 @@ Bash）运行以下命令即可：<code>npm install --save live2d-widget-model-h
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i hexo-renderer-pandoc --save</span><br></pre></td></tr></table></figure>
 <p>然后在想开启MathJax的博客前面加上<code>mathjax: true</code>，比如</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: On the Electrodynamics of Moving Bodies</span><br><span class="line">categories: Physics</span><br><span class="line">date: 1905-06-30 12:00:00</span><br><span class="line">mathjax: true</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
+<hr>
 <h3 id="部署github">部署GitHub</h3>
 <h4 id="创建-github-仓库">创建 GitHub 仓库</h4>
 <p>登录到您的 GitHub 账号，在 GitHub 页面右上角点击 <code>+</code>
@@ -636,14 +642,18 @@ GitHub 用户名。<code>type字段</code> 指定部署类型为
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2024/12/10/Crypto/%E6%95%B4%E6%95%B0%E5%88%86%E8%A7%A3/%E4%BA%8C%E6%AC%A1%E7%AD%9B%E6%B3%95/%E4%BA%8C%E6%AC%A1%E7%AD%9B%E6%B3%95/" rel="next" title="二次筛法">
+                <i class="fa fa-chevron-left"></i> 二次筛法
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2024/12/10/Crypto/%E6%95%B4%E6%95%B0%E5%88%86%E8%A7%A3/%E4%BA%8C%E6%AC%A1%E7%AD%9B%E6%B3%95/%E4%BA%8C%E6%AC%A1%E7%AD%9B%E6%B3%95/" rel="prev" title="二次筛法">
-                二次筛法 <i class="fa fa-chevron-right"></i>
+              <a href="/2024/12/16/Crypto/%E6%95%B4%E6%95%B0%E5%88%86%E8%A7%A3/%E7%B4%A0%E6%80%A7%E6%A3%80%E6%B5%8B/%E7%B4%A0%E6%80%A7%E6%A3%80%E6%B5%8B/" rel="prev" title="素性检测">
+                素性检测 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -721,7 +731,7 @@ GitHub 用户名。<code>type字段</code> 指定部署类型为
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
